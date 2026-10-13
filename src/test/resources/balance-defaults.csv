@@ -1,0 +1,73 @@
+group,key,swing_cost,held_weight,draw_per_second,stability,melee_block,projectile_block,tier,notes
+weapon_type,dagger,6,1,6,,,,,draw applies while charging a throw
+weapon_type,parrying_dagger,6,1,,,,,,parry cost is a later release
+weapon_type,caestus,5,1,,,,,,
+weapon_type,throwing_knife,6,1,6,,,,,
+weapon_type,boomerang,6,1,6,,,,,
+weapon_type,rapier,8,2,,,,,,
+weapon_type,saber,8,2,,,,,,
+weapon_type,throwing_axe,8,2,8,,,,,
+weapon_type,longsword,12,3,,,,,,
+weapon_type,katana,12,3,,,,,,
+weapon_type,spear,10,3,,,,,,
+weapon_type,javelin,10,3,8,,,,,
+weapon_type,quarterstaff,10,3,,,,,,
+weapon_type,mace,14,4,,,,,,
+weapon_type,club,14,4,,,,,,
+weapon_type,hammer,14,4,,,,,,
+weapon_type,battleaxe,16,5,,,,,,
+weapon_type,glaive,16,5,,,,,,
+weapon_type,halberd,16,5,,,,,,
+weapon_type,pike,16,5,,,,,,
+weapon_type,lance,16,5,,,,,,
+weapon_type,scythe,16,5,,,,,,
+weapon_type,greatsword,18,6,,,,,,
+weapon_type,warhammer,18,6,,,,,,
+weapon_type,longbow,,3,10,,,,,swing cost stays the JASS default
+weapon_type,crossbow,,4,3,,,,,draw_per_second is the aiming drain of a loaded crossbow
+shield_tier,tier_1_basic,,4,,30,1.0,1.0,1,
+shield_tier,tier_2_basic,,4,,40,1.0,1.0,2,
+shield_tier,tier_3_basic,,4,,50,1.0,1.0,3,
+shield_tier,tier_4_basic,,5,,60,1.0,1.0,4,
+shield_tier,tier_5_basic,,5,,70,1.0,1.0,5,
+shield_tier,tier_1_tower,,8,,60,1.0,1.0,1,
+shield_tier,tier_2_tower,,8,,70,1.0,1.0,2,
+shield_tier,tier_3_tower,,8,,80,1.0,1.0,3,
+shield_tier,tier_4_tower,,8,,90,1.0,1.0,4,
+shield_tier,tier_5_tower,,8,,100,1.0,1.0,5,
+action,shield_bash,8,,,,,,,one-time cost
+action,crossbow_loading,,,10,,,,,drain per second while loading
+shield_material,wood,,,,,,,1,tower version exists
+shield_material,stone,,,,,,,2,tower version exists
+shield_material,gold,,,,,,,2,tower version exists
+shield_material,copper,,,,,,,2,tower version exists
+shield_material,tin,,,,,,,2,tower version exists
+shield_material,lead,,,,,,,2,tower version exists
+shield_material,iron,,,,,,,3,tower version exists
+shield_material,bronze,,,,,,,3,tower version exists
+shield_material,silver,,,,,,,3,tower version exists
+shield_material,nickel,,,,,,,3,tower version exists
+shield_material,invar,,,,,,,3,tower version exists
+shield_material,constantan,,,,,,,3,tower version exists
+shield_material,darkstone,,,,,,,3,basic only
+shield_material,steel,,,,,,,4,tower version exists
+shield_material,electrum,,,,,,,4,tower version exists
+shield_material,platinum,,,,,,,4,tower version exists
+shield_material,obsidian,,,,,,,4,tower version exists
+shield_material,manasteel,,,,,,,4,basic only
+shield_material,thaumium,,,,,,,4,basic only
+shield_material,abyssalnite,,,,,,,4,basic only
+shield_material,soulforged_steel,,,,,,,4,basic only
+shield_material,riot_enderio,,,,,,,4,basic only
+shield_material,riot_rftools,,,,,,,4,basic only
+shield_material,flux_ra,,,,,,,4,basic only
+shield_material,diamond,,,,,,,5,tower version exists
+shield_material,terrasteel,,,,,,,5,basic only
+shield_material,elementium,,,,,,,5,basic only
+shield_material,enderium,,,,,,,5,basic only
+shield_material,signalum,,,,,,,5,basic only
+shield_material,lumium,,,,,,,5,basic only
+shield_material,void,,,,,,,5,basic only
+shield_material,coralium,,,,,,,5,basic only
+shield_material,dreadium,,,,,,,5,basic only
+shield_material,ethaxium,,,,,,,5,basic only
