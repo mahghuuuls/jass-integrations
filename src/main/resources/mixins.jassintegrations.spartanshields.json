@@ -1,0 +1,17 @@
+{
+  "package": "com.mahghuuuls.jassintegrations.mixin.spartanshields",
+  "refmap": "mixins.jassintegrations.refmap.json",
+  "required": false,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "injectors": {
+    "defaultRequire": 0
+  },
+  "mixins": [
+    "MixinPacketShieldBash"
+  ],
+  "client": [
+    "MixinEventHandlerClient"
+  ],
+  "server": []
+}

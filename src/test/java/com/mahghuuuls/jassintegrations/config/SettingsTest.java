@@ -12,12 +12,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SettingsTest {
 
     private static Settings parse(List<String> warnings, String... lines) {
-        return Settings.fromConfig(false, true, lines, true, BalanceDefaults.SHIELD_TIERS,
-                BalanceDefaults.SHIELD_MATERIALS, warnings);
+        Settings.Raw raw = new Settings.Raw();
+        raw.weaponTypes = lines;
+        return Settings.fromConfig(raw, warnings);
     }
 
     private static Settings shields(List<String> warnings, String[] tiers, String... materials) {
-        return Settings.fromConfig(false, true, BalanceDefaults.WEAPON_TYPES, true, tiers, materials, warnings);
+        Settings.Raw raw = new Settings.Raw();
+        raw.shieldTiers = tiers;
+        raw.shieldMaterials = materials;
+        return Settings.fromConfig(raw, warnings);
+    }
+
+    private static Settings bashCost(List<String> warnings, double cost) {
+        Settings.Raw raw = new Settings.Raw();
+        raw.shieldBashCost = cost;
+        return Settings.fromConfig(raw, warnings);
     }
 
     @Test
@@ -133,6 +143,32 @@ class SettingsTest {
         assertEquals(0.5, settings.shield("tower", "wood").meleeBlock);
         assertEquals(0.25, settings.shield("tower", "wood").projectileBlock);
         assertEquals(7.0, settings.shield("tower", "wood").heldWeight);
+    }
+
+    @Test
+    void bashCostDefaultZeroAndInvalid() {
+        List<String> warnings = new ArrayList<>();
+        assertEquals(8.0, bashCost(warnings, BalanceDefaults.SHIELD_BASH_COST).shieldBashCost);
+        assertEquals(0.0, bashCost(warnings, 0.0).shieldBashCost);
+        assertEquals(12.5, bashCost(warnings, 12.5).shieldBashCost);
+        assertTrue(warnings.isEmpty(), warnings.toString());
+        assertEquals(8.0, bashCost(warnings, -1.0).shieldBashCost);
+        assertEquals(8.0, bashCost(warnings, Double.NaN).shieldBashCost);
+        assertEquals(2, warnings.size(), warnings.toString());
+    }
+
+    @Test
+    void crossbowLoadingDrainDefaultZeroAndInvalid() {
+        List<String> warnings = new ArrayList<>();
+        Settings.Raw raw = new Settings.Raw();
+        assertEquals(10.0, Settings.fromConfig(raw, warnings).crossbowLoadingDrain);
+        raw.crossbowLoadingDrain = 0.0;
+        assertEquals(0.0, Settings.fromConfig(raw, warnings).crossbowLoadingDrain);
+        assertTrue(warnings.isEmpty(), warnings.toString());
+        raw.crossbowLoadingDrain = -2.0;
+        assertEquals(10.0, Settings.fromConfig(raw, warnings).crossbowLoadingDrain);
+        assertEquals(1, warnings.size(), warnings.toString());
+        assertTrue(warnings.get(0).startsWith("crossbow.loading_drain"), warnings.get(0));
     }
 
     @Test

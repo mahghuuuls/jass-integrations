@@ -40,6 +40,12 @@ public final class BalanceDefaults {
             "crossbow=,4,3"
     };
 
+    /** One-time stamina cost of a Spartan Shields shield bash. */
+    public static final double SHIELD_BASH_COST = 8.0;
+
+    /** Stamina drained per second while loading a Spartan crossbow. */
+    public static final double CROSSBOW_LOADING_DRAIN = 10.0;
+
     /** Number of shield tiers. */
     public static final int SHIELD_TIER_COUNT = 5;
 

@@ -55,6 +55,14 @@ public final class IntegrationGate {
         /** Runs after every mod has registered its items. */
         default void postInit() {
         }
+
+        /**
+         * Name of the client-only class (a {@link Runnable}) that starts this integration's client
+         * parts, or {@code null}. Loaded by name, only by the client proxy.
+         */
+        default String clientEntryClass() {
+            return null;
+        }
     }
 
     static final class Entry {
@@ -117,10 +125,52 @@ public final class IntegrationGate {
         }
     }
 
+    /** Starts the client parts of the running integrations. Called only by the client proxy. */
+    public static void startClientParts() {
+        for (Integration integration : started) {
+            String name = integration.clientEntryClass();
+            if (name == null) {
+                continue;
+            }
+            try {
+                ((Runnable) Class.forName(name).newInstance()).run();
+            } catch (ReflectiveOperationException | LinkageError | RuntimeException e) {
+                DebugLog.warn("Client part " + name + " not started: " + e);
+            }
+        }
+    }
+
     /** Lets running integrations act once every mod has registered its items. */
     public static void postInitAll() {
         for (Integration integration : started) {
             integration.postInit();
+        }
+    }
+
+    /**
+     * Whether a class declares a method with exactly these parameter types, checked without
+     * initializing any class. {@code false} when the class or a parameter type is missing.
+     */
+    public static boolean hasMethod(String className, String methodName, String... parameterClassNames) {
+        ClassLoader loader = IntegrationGate.class.getClassLoader();
+        try {
+            Class<?>[] parameters = new Class<?>[parameterClassNames.length];
+            for (int i = 0; i < parameters.length; i++) {
+                parameters[i] = Class.forName(parameterClassNames[i], false, loader);
+            }
+            Class.forName(className, false, loader).getDeclaredMethod(methodName, parameters);
+            return true;
+        } catch (ReflectiveOperationException | LinkageError e) {
+            return false;
+        }
+    }
+
+    /** Whether a class (loaded without initializing it) implements an interface; {@code false} when the class is missing. */
+    public static boolean implementsInterface(String className, Class<?> marker) {
+        try {
+            return marker.isAssignableFrom(Class.forName(className, false, IntegrationGate.class.getClassLoader()));
+        } catch (ClassNotFoundException | LinkageError e) {
+            return false;
         }
     }
 

@@ -37,6 +37,15 @@ class IntegrationGateTest {
     }
 
     @Test
+    void hasMethodChecksNameAndExactParameters() {
+        assertEquals(true, IntegrationGate.hasMethod("java.lang.String", "valueOf", "java.lang.Object"));
+        assertEquals(false, IntegrationGate.hasMethod("java.lang.String", "valueOf", "java.lang.Thread"));
+        assertEquals(false, IntegrationGate.hasMethod("java.lang.String", "noSuchMethod", "java.lang.Object"));
+        assertEquals(false, IntegrationGate.hasMethod("com.example.NotThere", "valueOf", "java.lang.Object"));
+        assertEquals(false, IntegrationGate.hasMethod("java.lang.String", "valueOf", "com.example.NotThere"));
+    }
+
+    @Test
     void everyEntryClassExists() {
         for (IntegrationGate.Entry entry : IntegrationGate.ENTRIES) {
             assertEquals(Collections.emptyList(), IntegrationGate.missingClasses(Collections.singletonList(entry.entryClass)),

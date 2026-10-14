@@ -54,6 +54,9 @@ final class WeaponTypeClassifier {
         types.put(ITEM_PACKAGE + simpleName, type);
     }
 
+    /** The classifier for Spartan Weaponry 1.6.1, shared by the value provider and crossbow loading. */
+    static final WeaponTypeClassifier SPARTAN = new WeaponTypeClassifier(SPARTAN_CLASS_TYPES);
+
     private static final String NONE = "";
 
     private final Map<String, String> classTypes;

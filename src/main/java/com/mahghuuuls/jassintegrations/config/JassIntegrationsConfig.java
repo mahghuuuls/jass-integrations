@@ -22,6 +22,9 @@ public final class JassIntegrationsConfig {
     @Config.Name("spartan_shields")
     public static final SpartanShields spartanShields = new SpartanShields();
 
+    @Config.Name("crossbow")
+    public static final Crossbow crossbow = new Crossbow();
+
     public static final class General {
 
         @Config.Name("debug_logging")
@@ -62,5 +65,23 @@ public final class JassIntegrationsConfig {
                 "The tier of each shield material, one line each: material=tier (1 to 5). Example: iron=3",
                 "JASS config entries for a single shield win over these values."})
         public String[] shieldMaterials = BalanceDefaults.SHIELD_MATERIALS.clone();
+
+        @Config.Name("bash_cost")
+        @Config.Comment({
+                "Stamina cost of one shield bash (hit or miss). A bash is refused at 0 Stamina or below and may go into debt.",
+                "0 makes the bash free and never refused."})
+        @Config.RangeDouble(min = 0.0, max = 1000.0)
+        public double bashCost = BalanceDefaults.SHIELD_BASH_COST;
+    }
+
+    public static final class Crossbow {
+
+        @Config.Name("loading_drain")
+        @Config.Comment({
+                "Stamina drained per second while loading a Spartan Weaponry crossbow. Loading stops when Stamina runs out",
+                "and cannot start at 0 Stamina, even when the drain is 0 (as for a JASS bow). 0 makes loading free. Aiming a",
+                "loaded crossbow uses the crossbow line of spartan_weaponry.weapon_types (draw_per_second)."})
+        @Config.RangeDouble(min = 0.0, max = 1000.0)
+        public double loadingDrain = BalanceDefaults.CROSSBOW_LOADING_DRAIN;
     }
 }

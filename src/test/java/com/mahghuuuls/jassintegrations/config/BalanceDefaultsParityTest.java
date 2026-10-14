@@ -70,6 +70,16 @@ class BalanceDefaultsParityTest {
     }
 
     @Test
+    void shieldBashCostMatchesTable() throws IOException {
+        assertEquals(table("action", "swing_cost").get("shield_bash")[0], BalanceDefaults.SHIELD_BASH_COST);
+    }
+
+    @Test
+    void crossbowLoadingDrainMatchesTable() throws IOException {
+        assertEquals(table("action", "draw_per_second").get("crossbow_loading")[0], BalanceDefaults.CROSSBOW_LOADING_DRAIN);
+    }
+
+    @Test
     void shieldMaterialDefaultsMatchTable() throws IOException {
         assertSame(table("shield_material", "tier"), Settings.shippedDefaults("shield_materials"));
     }

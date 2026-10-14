@@ -6,6 +6,7 @@ import com.mahghuuuls.jassintegrations.diagnostic.DebugLog;
 import com.mahghuuuls.jassintegrations.integration.IntegrationGate;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public final class SpartanWeaponryIntegration implements IntegrationGate.Integra
 
     static final ResourceLocation PROVIDER_ID = new ResourceLocation(Tags.MOD_ID, "spartan_weaponry");
 
-    private final WeaponTypeClassifier classifier = new WeaponTypeClassifier(WeaponTypeClassifier.SPARTAN_CLASS_TYPES);
+    private final WeaponTypeClassifier classifier = WeaponTypeClassifier.SPARTAN;
 
     @Override
     public List<String> compatibilityProblems() {
@@ -36,6 +37,12 @@ public final class SpartanWeaponryIntegration implements IntegrationGate.Integra
     @Override
     public void start() {
         JassApi.registerItemValueProvider(PROVIDER_ID, new SpartanWeaponValueProvider(classifier));
+        MinecraftForge.EVENT_BUS.register(new CrossbowLoadingHandler());
+    }
+
+    @Override
+    public String clientEntryClass() {
+        return "com.mahghuuuls.jassintegrations.client.CrossbowLoadingGuard";
     }
 
     /** With {@code debug_logging} on, lists the registered items of each weapon type once. */

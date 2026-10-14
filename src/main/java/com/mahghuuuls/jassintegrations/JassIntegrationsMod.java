@@ -8,6 +8,7 @@ import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -17,11 +18,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
                 + "after:spartanweaponry;after:spartanshields;after:qualitytools;after:quark")
 public class JassIntegrationsMod {
 
+    @SidedProxy(clientSide = "com.mahghuuuls.jassintegrations.client.ClientProxy",
+            serverSide = "com.mahghuuuls.jassintegrations.CommonProxy")
+    public static CommonProxy proxy;
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         reloadSettings();
         MinecraftForge.EVENT_BUS.register(new ConfigListener());
         IntegrationGate.startAll();
+        proxy.startClientParts();
     }
 
     @Mod.EventHandler

@@ -63,6 +63,8 @@ dependencies {
     compileOnly rfg.deobf('curse.maven:quality-tools-264756:2732994')
     // Tests check the Spartan Weaponry class names the weapon-type table relies on.
     testImplementation rfg.deobf('curse.maven:spartan-weaponry-278141:6839689')
+    // Tests check the Spartan Shields methods the shield bash Mixins patch.
+    testImplementation rfg.deobf('curse.maven:spartan-shields-252239:3567495')
 
     // Development runtime with the target mods, opt-in: set dev_runtime_targets = true in gradle.properties.
     if (propertyBool('dev_runtime_targets')) {

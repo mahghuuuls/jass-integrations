@@ -27,8 +27,7 @@ public final class Settings {
     private static final Map<String, double[]> DEFAULT_SHIELD_TIERS = defaults(SHIELD_TIER_LINES, BalanceDefaults.SHIELD_TIERS);
     private static final Map<String, double[]> DEFAULT_SHIELD_MATERIALS = defaults(SHIELD_MATERIAL_LINES, BalanceDefaults.SHIELD_MATERIALS);
 
-    private static volatile Settings current = fromConfig(false, true, BalanceDefaults.WEAPON_TYPES,
-            true, BalanceDefaults.SHIELD_TIERS, BalanceDefaults.SHIELD_MATERIALS, new ArrayList<>());
+    private static volatile Settings current = fromConfig(new Raw(), new ArrayList<>());
 
     public final boolean debugLogging;
     public final boolean spartanWeaponryEnabled;
@@ -36,15 +35,36 @@ public final class Settings {
     private final Map<String, WeaponValues> weaponTypes;
     private final Map<String, ShieldValues> shieldTiers;
     private final Map<String, Integer> materialTiers;
+    /** One-time cost of a Spartan Shields shield bash; 0 makes the bash free and never refused. */
+    public final double shieldBashCost;
+    /** Stamina drained per second while loading a Spartan crossbow; 0 makes loading free. */
+    public final double crossbowLoadingDrain;
 
-    private Settings(boolean debugLogging, boolean spartanWeaponryEnabled, Map<String, WeaponValues> weaponTypes,
-            boolean spartanShieldsEnabled, Map<String, ShieldValues> shieldTiers, Map<String, Integer> materialTiers) {
-        this.debugLogging = debugLogging;
-        this.spartanWeaponryEnabled = spartanWeaponryEnabled;
+    /**
+     * The raw configuration values, before parsing. Starts at the shipped defaults; {@link #reload()}
+     * fills it from the configuration file and tests fill only what they check.
+     */
+    static final class Raw {
+        boolean debugLogging = false;
+        boolean spartanWeaponryEnabled = true;
+        String[] weaponTypes = BalanceDefaults.WEAPON_TYPES;
+        boolean spartanShieldsEnabled = true;
+        String[] shieldTiers = BalanceDefaults.SHIELD_TIERS;
+        String[] shieldMaterials = BalanceDefaults.SHIELD_MATERIALS;
+        double shieldBashCost = BalanceDefaults.SHIELD_BASH_COST;
+        double crossbowLoadingDrain = BalanceDefaults.CROSSBOW_LOADING_DRAIN;
+    }
+
+    private Settings(Raw raw, Map<String, WeaponValues> weaponTypes, Map<String, ShieldValues> shieldTiers,
+            Map<String, Integer> materialTiers, double shieldBashCost, double crossbowLoadingDrain) {
+        this.debugLogging = raw.debugLogging;
+        this.spartanWeaponryEnabled = raw.spartanWeaponryEnabled;
+        this.spartanShieldsEnabled = raw.spartanShieldsEnabled;
         this.weaponTypes = weaponTypes;
-        this.spartanShieldsEnabled = spartanShieldsEnabled;
         this.shieldTiers = shieldTiers;
         this.materialTiers = materialTiers;
+        this.shieldBashCost = shieldBashCost;
+        this.crossbowLoadingDrain = crossbowLoadingDrain;
     }
 
     public static Settings current() {
@@ -57,29 +77,44 @@ public final class Settings {
      * @return one warning per rejected line, for the caller to log
      */
     public static List<String> reload() {
+        Raw raw = new Raw();
+        raw.debugLogging = JassIntegrationsConfig.general.debugLogging;
+        raw.spartanWeaponryEnabled = JassIntegrationsConfig.spartanWeaponry.enabled;
+        raw.weaponTypes = JassIntegrationsConfig.spartanWeaponry.weaponTypes;
+        raw.spartanShieldsEnabled = JassIntegrationsConfig.spartanShields.enabled;
+        raw.shieldTiers = JassIntegrationsConfig.spartanShields.shieldTiers;
+        raw.shieldMaterials = JassIntegrationsConfig.spartanShields.shieldMaterials;
+        raw.shieldBashCost = JassIntegrationsConfig.spartanShields.bashCost;
+        raw.crossbowLoadingDrain = JassIntegrationsConfig.crossbow.loadingDrain;
         List<String> warnings = new ArrayList<>();
-        current = fromConfig(JassIntegrationsConfig.general.debugLogging,
-                JassIntegrationsConfig.spartanWeaponry.enabled,
-                JassIntegrationsConfig.spartanWeaponry.weaponTypes,
-                JassIntegrationsConfig.spartanShields.enabled,
-                JassIntegrationsConfig.spartanShields.shieldTiers,
-                JassIntegrationsConfig.spartanShields.shieldMaterials, warnings);
+        current = fromConfig(raw, warnings);
         return warnings;
     }
 
-    static Settings fromConfig(boolean debugLogging, boolean spartanWeaponryEnabled, String[] weaponTypeLines,
-            boolean spartanShieldsEnabled, String[] shieldTierLines, String[] shieldMaterialLines, List<String> warnings) {
+    static Settings fromConfig(Raw raw, List<String> warnings) {
         Map<String, WeaponValues> weaponTypes = new LinkedHashMap<>();
-        WEAPON_TYPE_LINES.parse(weaponTypeLines, DEFAULT_WEAPON_TYPES, warnings)
+        WEAPON_TYPE_LINES.parse(raw.weaponTypes, DEFAULT_WEAPON_TYPES, warnings)
                 .forEach((type, v) -> weaponTypes.put(type, new WeaponValues(v[0], v[1], v[2])));
         Map<String, ShieldValues> shieldTiers = new LinkedHashMap<>();
-        SHIELD_TIER_LINES.parse(shieldTierLines, DEFAULT_SHIELD_TIERS, warnings)
+        SHIELD_TIER_LINES.parse(raw.shieldTiers, DEFAULT_SHIELD_TIERS, warnings)
                 .forEach((tier, v) -> shieldTiers.put(tier, new ShieldValues(v[0], v[1], v[2], v[3])));
         Map<String, Integer> materialTiers = new LinkedHashMap<>();
-        SHIELD_MATERIAL_LINES.parse(shieldMaterialLines, DEFAULT_SHIELD_MATERIALS, warnings)
+        SHIELD_MATERIAL_LINES.parse(raw.shieldMaterials, DEFAULT_SHIELD_MATERIALS, warnings)
                 .forEach((material, v) -> materialTiers.put(material, (int) v[0]));
-        return new Settings(debugLogging, spartanWeaponryEnabled, Collections.unmodifiableMap(weaponTypes),
-                spartanShieldsEnabled, Collections.unmodifiableMap(shieldTiers), Collections.unmodifiableMap(materialTiers));
+        double bashCost = zeroOrMore("spartan_shields.bash_cost", raw.shieldBashCost,
+                BalanceDefaults.SHIELD_BASH_COST, warnings);
+        double loadingDrain = zeroOrMore("crossbow.loading_drain", raw.crossbowLoadingDrain,
+                BalanceDefaults.CROSSBOW_LOADING_DRAIN, warnings);
+        return new Settings(raw, Collections.unmodifiableMap(weaponTypes), Collections.unmodifiableMap(shieldTiers),
+                Collections.unmodifiableMap(materialTiers), bashCost, loadingDrain);
+    }
+
+    private static double zeroOrMore(String option, double value, double fallback, List<String> warnings) {
+        if (Double.isNaN(value) || Double.isInfinite(value) || value < 0.0) {
+            warnings.add(option + " " + value + " ignored (must be 0 or more); the default is kept");
+            return fallback;
+        }
+        return value;
     }
 
     private static Map<String, double[]> defaults(ValueLines parser, String[] lines) {
