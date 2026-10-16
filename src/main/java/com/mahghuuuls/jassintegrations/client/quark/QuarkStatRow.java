@@ -15,6 +15,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.math.BigDecimal;
@@ -29,7 +31,8 @@ import java.util.function.ToIntFunction;
  * Stat Display is on and Shift is up. JASS's value lines are replaced by one marker line: it starts
  * with format codes the font draws as nothing and that Quark does not strip, so Quark (which places
  * its own row on the first blank line) never takes it; the spaces after them reserve the row's
- * width. The row is drawn on that line after the tooltip text. Modifier lines stay as JASS wrote them.
+ * width. The line then moves up, right below Quark's own row, and the row is drawn on it after the
+ * tooltip text. Modifier lines stay where JASS wrote them.
  */
 public final class QuarkStatRow implements Runnable {
 
@@ -99,18 +102,28 @@ public final class QuarkStatRow implements Runnable {
         }
     }
 
+    /** After every other handler: moves the row up, right below Quark's own row (or the item name). */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onItemTooltip(ItemTooltipEvent event) {
+        if (rowStack == null || event.getItemStack() != rowStack || failed) {
+            return;
+        }
+        try {
+            moveBelowTopRows(event.getToolTip());
+        } catch (RuntimeException | LinkageError e) {
+            switchOff(e);
+        }
+    }
+
     @SubscribeEvent
     public void onPostText(RenderTooltipEvent.PostText event) {
         if (rowStack == null || event.getStack() != rowStack || failed) {
             return;
         }
         try {
-            List<String> lines = event.getLines();
-            for (int i = 1; i < lines.size(); i++) {
-                if (lines.get(i).startsWith(MARKER)) {
-                    draw(event.getFontRenderer(), event.getX(), event.getY() + 10 * i + 1);
-                    return;
-                }
+            int line = markerLineIndex(event.getLines());
+            if (line > 0) {
+                draw(event.getFontRenderer(), event.getX(), event.getY() + 10 * line + 1);
             }
         } catch (RuntimeException | LinkageError e) {
             switchOff(e);
@@ -147,6 +160,46 @@ public final class QuarkStatRow implements Runnable {
             return false;
         }
         return !(lines.size() == 1 && lines.get(0).equals(jassHint));
+    }
+
+    /**
+     * Moves the marker line to just after the space-filled lines that follow the title. Those are the
+     * lines Quark reserves for its own rows, so this row sits right below them, or right below the item
+     * name when there are none. The marker line itself is never blank, so Quark does not count it.
+     */
+    static void moveBelowTopRows(List<String> tooltip) {
+        int marker = markerLineIndex(tooltip);
+        if (marker < 0) {
+            return;
+        }
+        String line = tooltip.remove(marker);
+        int position = 1;
+        while (position < tooltip.size() && isQuarkRowLine(tooltip.get(position))) {
+            position++;
+        }
+        tooltip.add(Math.min(position, tooltip.size()), line);
+    }
+
+    /**
+     * A line Quark reserves for one of its rows: spaces only, never empty. An empty line is another
+     * mod's separator (Quality Tools adds one before its quality), and the row goes above it.
+     */
+    private static boolean isQuarkRowLine(String line) {
+        String text = TextFormatting.getTextWithoutFormattingCodes(line);
+        return text != null && !text.isEmpty() && text.trim().isEmpty();
+    }
+
+    /**
+     * The index of the marker line after the title, or -1. The marker may follow other format codes:
+     * the creative inventory, for one, puts gray in front of every line after the title.
+     */
+    static int markerLineIndex(List<String> lines) {
+        for (int i = 1; i < lines.size(); i++) {
+            if (lines.get(i).contains(MARKER)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /** The font the tooltip is drawn with, so the reserved width matches the drawn row. */
