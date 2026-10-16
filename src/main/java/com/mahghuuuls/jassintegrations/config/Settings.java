@@ -33,6 +33,8 @@ public final class Settings {
     public final boolean spartanWeaponryEnabled;
     public final boolean spartanShieldsEnabled;
     public final boolean qualityToolsEnabled;
+    /** Client only: draw the JASS values as a Quark-style icon row. */
+    public final boolean quarkRowEnabled;
     private final Map<String, WeaponValues> weaponTypes;
     private final Map<String, ShieldValues> shieldTiers;
     private final Map<String, Integer> materialTiers;
@@ -55,6 +57,7 @@ public final class Settings {
         double shieldBashCost = BalanceDefaults.SHIELD_BASH_COST;
         double crossbowLoadingDrain = BalanceDefaults.CROSSBOW_LOADING_DRAIN;
         boolean qualityToolsEnabled = true;
+        boolean quarkRowEnabled = true;
     }
 
     private Settings(Raw raw, Map<String, WeaponValues> weaponTypes, Map<String, ShieldValues> shieldTiers,
@@ -63,6 +66,7 @@ public final class Settings {
         this.spartanWeaponryEnabled = raw.spartanWeaponryEnabled;
         this.spartanShieldsEnabled = raw.spartanShieldsEnabled;
         this.qualityToolsEnabled = raw.qualityToolsEnabled;
+        this.quarkRowEnabled = raw.quarkRowEnabled;
         this.weaponTypes = weaponTypes;
         this.shieldTiers = shieldTiers;
         this.materialTiers = materialTiers;
@@ -90,6 +94,7 @@ public final class Settings {
         raw.shieldBashCost = JassIntegrationsConfig.spartanShields.bashCost;
         raw.crossbowLoadingDrain = JassIntegrationsConfig.crossbow.loadingDrain;
         raw.qualityToolsEnabled = JassIntegrationsConfig.qualityTools.enabled;
+        raw.quarkRowEnabled = JassIntegrationsConfig.quark.quarkRow;
         List<String> warnings = new ArrayList<>();
         current = fromConfig(raw, warnings);
         return warnings;

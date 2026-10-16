@@ -24,7 +24,9 @@ public final class IntegrationGate {
             new Entry("Spartan Shields", "spartanshields", s -> s.spartanShieldsEnabled,
                     "com.mahghuuuls.jassintegrations.integration.spartanshields.SpartanShieldsIntegration"),
             new Entry("Quality Tools", "qualitytools", s -> s.qualityToolsEnabled,
-                    "com.mahghuuuls.jassintegrations.integration.qualitytools.QualityToolsIntegration")
+                    "com.mahghuuuls.jassintegrations.integration.qualitytools.QualityToolsIntegration"),
+            new Entry("Quark row", "quark", s -> s.quarkRowEnabled,
+                    "com.mahghuuuls.jassintegrations.integration.quark.QuarkIntegration")
     ));
 
     private static final List<Integration> started = new ArrayList<>();

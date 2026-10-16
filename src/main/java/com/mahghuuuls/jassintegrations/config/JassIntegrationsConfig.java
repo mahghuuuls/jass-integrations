@@ -28,6 +28,9 @@ public final class JassIntegrationsConfig {
     @Config.Name("quality_tools")
     public static final QualityTools qualityTools = new QualityTools();
 
+    @Config.Name("quark")
+    public static final Quark quark = new Quark();
+
     public static final class General {
 
         @Config.Name("debug_logging")
@@ -96,5 +99,15 @@ public final class JassIntegrationsConfig {
                 "have no effect on Stamina. This mod adds no qualities of its own. Needs a restart."})
         @Config.RequiresMcRestart
         public boolean enabled = true;
+    }
+
+    public static final class Quark {
+
+        @Config.Name("quark_row")
+        @Config.Comment({
+                "Client only. If true and Quark: RotN Edition's Visual Stat Display is on, item tooltips show the JASS values as",
+                "one row of icons and numbers (hold Shift for the JASS text). If false, the JASS text lines always show. Needs a restart."})
+        @Config.RequiresMcRestart
+        public boolean quarkRow = true;
     }
 }
