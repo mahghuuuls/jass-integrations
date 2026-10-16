@@ -39,21 +39,9 @@ dependencies {
     // Include OSXNarratorBlocker by default for the dev env, for M1+ Macs
     runtimeOnly 'com.cleanroommc:osxnarratorblocker:1.0'
 
-    // JASS 1.0.0, the required base mod. It is not on CurseForge yet, so the build uses the
-    // release jar placed in libs/ (not committed) and refuses any other file:
-    //   jass-1.0.0.jar, sha256 581582f0119b35e243a8af40ffba8df5edcd7313abd2eac93137067de4ec7821
-    // Shipping metadata declares required-after:jass@[1.0.0,). Switch this to the CurseMaven
-    // coordinate once JASS has a CurseForge file.
-    def jassJar = file('libs/jass-1.0.0.jar')
-    def jassSha256 = '581582f0119b35e243a8af40ffba8df5edcd7313abd2eac93137067de4ec7821'
-    if (!jassJar.exists()) {
-        throw new GradleException("Missing ${jassJar}: place the JASS 1.0.0 release jar there (sha256 ${jassSha256}).")
-    }
-    def jassActual = java.security.MessageDigest.getInstance('SHA-256').digest(jassJar.bytes).encodeHex().toString()
-    if (jassActual != jassSha256) {
-        throw new GradleException("${jassJar} has sha256 ${jassActual}, expected ${jassSha256}.")
-    }
-    implementation rfg.deobf(files(jassJar))
+    // JASS, the required base mod, from its CurseForge file: 1.1.0 (file 9208556). This mod uses
+    // only the 1.0 API, so the shipping metadata keeps required-after:jass@[1.0.0,).
+    implementation rfg.deobf('curse.maven:just-another-stamina-system-1740560:9208556')
 
     // Optional target mods: compiled against, never packaged, optional at runtime (after:<modid>).
     // Inspected artifacts (DEPREF-003): Spartan Weaponry 1.6.1, Spartan Shields 1.5.5, Quality Tools 1.0.7.
