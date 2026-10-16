@@ -1,0 +1,9 @@
+# Quality attribute names, shown in Quality Tools tooltips as "+<amount> <name>".
+# The game formats these names, so a percent sign is written %%.
+attribute.name.jassintegrations.max_stamina_flat=Maximum Stamina
+attribute.name.jassintegrations.max_stamina_percent=%% Maximum Stamina
+attribute.name.jassintegrations.regeneration_flat=Stamina Regeneration (per second)
+attribute.name.jassintegrations.regeneration_percent=%% Stamina Regeneration
+attribute.name.jassintegrations.delay_reduction_flat=Regeneration Delay Reduction (s)
+attribute.name.jassintegrations.delay_reduction_percent=%% Regeneration Delay Reduction
+attribute.name.jassintegrations.stamina_efficiency=Stamina Efficiency

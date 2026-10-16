@@ -22,7 +22,9 @@ public final class IntegrationGate {
             new Entry("Spartan Weaponry", "spartanweaponry", s -> s.spartanWeaponryEnabled,
                     "com.mahghuuuls.jassintegrations.integration.spartanweaponry.SpartanWeaponryIntegration"),
             new Entry("Spartan Shields", "spartanshields", s -> s.spartanShieldsEnabled,
-                    "com.mahghuuuls.jassintegrations.integration.spartanshields.SpartanShieldsIntegration")
+                    "com.mahghuuuls.jassintegrations.integration.spartanshields.SpartanShieldsIntegration"),
+            new Entry("Quality Tools", "qualitytools", s -> s.qualityToolsEnabled,
+                    "com.mahghuuuls.jassintegrations.integration.qualitytools.QualityToolsIntegration")
     ));
 
     private static final List<Integration> started = new ArrayList<>();

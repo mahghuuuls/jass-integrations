@@ -25,6 +25,9 @@ public final class JassIntegrationsConfig {
     @Config.Name("crossbow")
     public static final Crossbow crossbow = new Crossbow();
 
+    @Config.Name("quality_tools")
+    public static final QualityTools qualityTools = new QualityTools();
+
     public static final class General {
 
         @Config.Name("debug_logging")
@@ -83,5 +86,15 @@ public final class JassIntegrationsConfig {
                 "loaded crossbow uses the crossbow line of spartan_weaponry.weapon_types (draw_per_second)."})
         @Config.RangeDouble(min = 0.0, max = 1000.0)
         public double loadingDrain = BalanceDefaults.CROSSBOW_LOADING_DRAIN;
+    }
+
+    public static final class QualityTools {
+
+        @Config.Name("enabled")
+        @Config.Comment({
+                "If false, the jassintegrations.* quality attributes do not exist, so Quality Tools qualities that name them",
+                "have no effect on Stamina. This mod adds no qualities of its own. Needs a restart."})
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
     }
 }

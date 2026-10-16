@@ -32,6 +32,7 @@ public final class Settings {
     public final boolean debugLogging;
     public final boolean spartanWeaponryEnabled;
     public final boolean spartanShieldsEnabled;
+    public final boolean qualityToolsEnabled;
     private final Map<String, WeaponValues> weaponTypes;
     private final Map<String, ShieldValues> shieldTiers;
     private final Map<String, Integer> materialTiers;
@@ -53,6 +54,7 @@ public final class Settings {
         String[] shieldMaterials = BalanceDefaults.SHIELD_MATERIALS;
         double shieldBashCost = BalanceDefaults.SHIELD_BASH_COST;
         double crossbowLoadingDrain = BalanceDefaults.CROSSBOW_LOADING_DRAIN;
+        boolean qualityToolsEnabled = true;
     }
 
     private Settings(Raw raw, Map<String, WeaponValues> weaponTypes, Map<String, ShieldValues> shieldTiers,
@@ -60,6 +62,7 @@ public final class Settings {
         this.debugLogging = raw.debugLogging;
         this.spartanWeaponryEnabled = raw.spartanWeaponryEnabled;
         this.spartanShieldsEnabled = raw.spartanShieldsEnabled;
+        this.qualityToolsEnabled = raw.qualityToolsEnabled;
         this.weaponTypes = weaponTypes;
         this.shieldTiers = shieldTiers;
         this.materialTiers = materialTiers;
@@ -86,6 +89,7 @@ public final class Settings {
         raw.shieldMaterials = JassIntegrationsConfig.spartanShields.shieldMaterials;
         raw.shieldBashCost = JassIntegrationsConfig.spartanShields.bashCost;
         raw.crossbowLoadingDrain = JassIntegrationsConfig.crossbow.loadingDrain;
+        raw.qualityToolsEnabled = JassIntegrationsConfig.qualityTools.enabled;
         List<String> warnings = new ArrayList<>();
         current = fromConfig(raw, warnings);
         return warnings;
