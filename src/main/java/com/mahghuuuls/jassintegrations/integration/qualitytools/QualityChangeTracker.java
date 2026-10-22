@@ -2,6 +2,7 @@ package com.mahghuuuls.jassintegrations.integration.qualitytools;
 
 import com.mahghuuuls.jass.api.JassApi;
 import com.mahghuuuls.jassintegrations.diagnostic.DebugLog;
+import com.mahghuuuls.jassintegrations.integration.stamina.StaminaBonusTotals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -32,7 +33,7 @@ final class QualityChangeTracker {
                 || player.ticksExisted % CHECK_INTERVAL_TICKS != 0) {
             return;
         }
-        QualityTotals totals = QualityAttributes.totals(player);
+        StaminaBonusTotals totals = QualityAttributes.totals(player);
         Seen previous = lastSeen.put(player.getUniqueID(), new Seen(player, totals));
         if (totals.equals(Seen.totalsFor(previous, player))) {
             return;
@@ -49,9 +50,9 @@ final class QualityChangeTracker {
     /** The totals last seen on one player entity. */
     static final class Seen {
         final WeakReference<Object> entity;
-        final QualityTotals totals;
+        final StaminaBonusTotals totals;
 
-        Seen(Object entity, QualityTotals totals) {
+        Seen(Object entity, StaminaBonusTotals totals) {
             this.entity = new WeakReference<>(entity);
             this.totals = totals;
         }
@@ -61,8 +62,8 @@ final class QualityChangeTracker {
          * from the End creates a new entity with the same UUID and entity id, and JASS may have built
          * its profile before Quality Tools gave that entity any modifier, so it starts from none.
          */
-        static QualityTotals totalsFor(Seen seen, Object entity) {
-            return seen != null && seen.entity.get() == entity ? seen.totals : QualityTotals.NONE;
+        static StaminaBonusTotals totalsFor(Seen seen, Object entity) {
+            return seen != null && seen.entity.get() == entity ? seen.totals : StaminaBonusTotals.NONE;
         }
     }
 }

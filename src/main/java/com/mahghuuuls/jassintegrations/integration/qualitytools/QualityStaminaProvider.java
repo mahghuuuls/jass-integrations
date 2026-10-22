@@ -2,6 +2,7 @@ package com.mahghuuuls.jassintegrations.integration.qualitytools;
 
 import com.mahghuuuls.jass.api.IContextualStaminaModifierProvider;
 import com.mahghuuuls.jass.api.StaminaContribution;
+import com.mahghuuuls.jassintegrations.integration.stamina.StaminaBonusMapping;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -15,6 +16,6 @@ final class QualityStaminaProvider implements IContextualStaminaModifierProvider
         if (player.world.isRemote) {
             return StaminaContribution.EMPTY;
         }
-        return QualityStaminaMapping.map(QualityAttributes.totals(player));
+        return StaminaBonusMapping.map(QualityAttributes.totals(player));
     }
 }

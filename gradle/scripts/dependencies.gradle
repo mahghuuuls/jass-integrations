@@ -49,10 +49,12 @@ dependencies {
     compileOnly rfg.deobf('curse.maven:spartan-weaponry-278141:6839689')
     compileOnly rfg.deobf('curse.maven:spartan-shields-252239:3567495')
     compileOnly rfg.deobf('curse.maven:quality-tools-264756:2732994')
+    compileOnly rfg.deobf('curse.maven:just-another-food-system-1758738:9283113')
     // Tests check the Spartan Weaponry class names the weapon-type table relies on.
     testImplementation rfg.deobf('curse.maven:spartan-weaponry-278141:6839689')
     // Tests check the Spartan Shields methods the shield bash Mixins patch.
     testImplementation rfg.deobf('curse.maven:spartan-shields-252239:3567495')
+    testImplementation rfg.deobf('curse.maven:just-another-food-system-1758738:9283113')
 
     // Development runtime with the target mods, opt-in: set dev_runtime_targets = true in gradle.properties.
     if (propertyBool('dev_runtime_targets')) {
@@ -62,6 +64,7 @@ dependencies {
         runtimeOnly rfg.deobf('curse.maven:potion-core-242872:2905184')
         runtimeOnly rfg.deobf('curse.maven:quark-rotn-edition-417392:8223948')
         runtimeOnly rfg.deobf('curse.maven:autoreglib-250363:2746011')
+        runtimeOnly rfg.deobf('curse.maven:just-another-food-system-1758738:9283113')
     }
 
     // Agent Diagnostics Toolkit, development runtime only; never packaged or declared.

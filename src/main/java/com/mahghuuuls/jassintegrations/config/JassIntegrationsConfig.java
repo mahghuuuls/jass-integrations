@@ -31,6 +31,9 @@ public final class JassIntegrationsConfig {
     @Config.Name("quark")
     public static final Quark quark = new Quark();
 
+    @Config.Name("jafs")
+    public static final Jafs jafs = new Jafs();
+
     public static final class General {
 
         @Config.Name("debug_logging")
@@ -109,5 +112,15 @@ public final class JassIntegrationsConfig {
                 "one row of icons and numbers (hold Shift for the JASS text). If false, the JASS text lines always show. Needs a restart."})
         @Config.RequiresMcRestart
         public boolean quarkRow = true;
+    }
+
+    public static final class Jafs {
+
+        @Config.Name("enabled")
+        @Config.Comment({
+                "If false, the jassintegrations:* JAFS properties are not registered, so JAFS foods that name them are",
+                "reported by JAFS and give no Stamina bonus. This mod adds no foods of its own. Needs a restart."})
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
     }
 }

@@ -7,3 +7,10 @@ attribute.name.jassintegrations.regeneration_percent=%% Stamina Regeneration
 attribute.name.jassintegrations.delay_reduction_flat=Regeneration Delay Reduction (s)
 attribute.name.jassintegrations.delay_reduction_percent=%% Regeneration Delay Reduction
 attribute.name.jassintegrations.stamina_efficiency=Stamina Efficiency
+
+# JAFS property names, shown in JAFS food tooltips as "+<amount> <name>" (percent: "+10% <name>";
+# flat: the unit follows the amount, for example "+0.5 s <name>"; JAFS shows one decimal place).
+property.jassintegrations.max_stamina=Maximum Stamina
+property.jassintegrations.stamina_regeneration=Stamina Regeneration
+property.jassintegrations.regeneration_delay_reduction=Regeneration Delay Reduction
+property.jassintegrations.stamina_efficiency=Stamina Efficiency
