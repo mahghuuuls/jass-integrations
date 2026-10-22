@@ -38,6 +38,23 @@ A positive amount helps the player and a negative amount hurts. The tooltip show
 
 With Quark's Visual Stat Display on, the JASS values in item tooltips show as one row of icons and numbers, right below Quark's own row. Hold Shift to see the JASS text instead.
 
+### [Just Another Food System](https://www.curseforge.com/minecraft/mc-mods/just-another-food-system)
+
+This mod adds no foods. It adds stamina properties that modpack creators can put on their JAFS foods in `config/jafs/foods.json`:
+
+- `jassintegrations:max_stamina` (flat or percent)
+- `jassintegrations:stamina_regeneration` (flat per second, or percent)
+- `jassintegrations:regeneration_delay_reduction` (flat seconds, or percent)
+- `jassintegrations:stamina_efficiency` (flat)
+
+Use them like any JAFS property in a food's modifiers:
+
+```json
+{ "property": "jassintegrations:max_stamina", "operation": "percent", "amount": 10 }
+```
+
+The bonus lasts while the food is active. A positive amount helps the player and a negative amount hurts. The food tooltip shows the line as "+10% Maximum Stamina".
+
 ## Configuration
 
 `config/jassintegrations.cfg` has a section for each integration, with a switch to turn it off and the values it uses. A JASS config entry for a single item always wins over these values. Switching an integration on or off needs a restart.

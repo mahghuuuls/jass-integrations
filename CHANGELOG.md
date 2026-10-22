@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.0
+
+### Added
+
+- Just Another Food System (JAFS): four stamina properties for modpack foods, `jassintegrations:max_stamina`, `jassintegrations:stamina_regeneration`, `jassintegrations:regeneration_delay_reduction`, and `jassintegrations:stamina_efficiency`, with the same units and signs as the Quality Tools attributes. A bonus lasts while JAFS keeps the food active. Food tooltips name each property.
+- Config: `jafs.enabled` switch.
+
+### Compatibility
+
+- Optional JAFS 1.0.0 or later (tested 1.0.0). Requirements unchanged: JASS 1.0.0 or later and MixinBooter 10.7 or later.
+
 ## 1.0.0
 
 ### Added
