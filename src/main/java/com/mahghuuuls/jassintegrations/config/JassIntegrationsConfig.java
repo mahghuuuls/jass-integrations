@@ -34,6 +34,9 @@ public final class JassIntegrationsConfig {
     @Config.Name("jafs")
     public static final Jafs jafs = new Jafs();
 
+    @Config.Name("setworks")
+    public static final Setworks setworks = new Setworks();
+
     public static final class General {
 
         @Config.Name("debug_logging")
@@ -120,6 +123,16 @@ public final class JassIntegrationsConfig {
         @Config.Comment({
                 "If false, the jassintegrations:* JAFS properties are not registered, so JAFS foods that name them are",
                 "reported by JAFS and give no Stamina bonus. This mod adds no foods of its own. Needs a restart."})
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
+    }
+
+    public static final class Setworks {
+
+        @Config.Name("enabled")
+        @Config.Comment({
+                "If false, the jassintegrations:* Setworks effects are not registered, so Setworks disables the bonuses that",
+                "name them, and every set those bonuses need, and reports why. This mod adds no sets of its own. Needs a restart."})
         @Config.RequiresMcRestart
         public boolean enabled = true;
     }

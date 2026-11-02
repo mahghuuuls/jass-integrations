@@ -28,7 +28,9 @@ public final class IntegrationGate {
             new Entry("Quark row", "quark", s -> s.quarkRowEnabled,
                     "com.mahghuuuls.jassintegrations.integration.quark.QuarkIntegration"),
             new Entry("JAFS", "jafs", s -> s.jafsEnabled,
-                    "com.mahghuuuls.jassintegrations.integration.jafs.JafsIntegration")
+                    "com.mahghuuuls.jassintegrations.integration.jafs.JafsIntegration"),
+            new Entry("Setworks", "setworks", s -> s.setworksEnabled,
+                    "com.mahghuuuls.jassintegrations.integration.setworks.SetworksIntegration")
     ));
 
     private static final List<Integration> started = new ArrayList<>();

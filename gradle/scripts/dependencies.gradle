@@ -17,6 +17,17 @@ repositories {
     exclusiveContent {
         forRepository {
             maven {
+                name 'BlameJared'
+                url 'https://maven.blamejared.com'
+            }
+        }
+        filter {
+            includeGroup 'CraftTweaker2'
+        }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
                 name 'Modrinth'
                 url 'https://api.modrinth.com/maven'
             }
@@ -50,11 +61,13 @@ dependencies {
     compileOnly rfg.deobf('curse.maven:spartan-shields-252239:3567495')
     compileOnly rfg.deobf('curse.maven:quality-tools-264756:2732994')
     compileOnly rfg.deobf('curse.maven:just-another-food-system-1758738:9283113')
+    compileOnly rfg.deobf('curse.maven:setworks-1768283:9339569')
     // Tests check the Spartan Weaponry class names the weapon-type table relies on.
     testImplementation rfg.deobf('curse.maven:spartan-weaponry-278141:6839689')
     // Tests check the Spartan Shields methods the shield bash Mixins patch.
     testImplementation rfg.deobf('curse.maven:spartan-shields-252239:3567495')
     testImplementation rfg.deobf('curse.maven:just-another-food-system-1758738:9283113')
+    testImplementation rfg.deobf('curse.maven:setworks-1768283:9339569')
 
     // Development runtime with the target mods, opt-in: set dev_runtime_targets = true in gradle.properties.
     if (propertyBool('dev_runtime_targets')) {
@@ -65,14 +78,17 @@ dependencies {
         runtimeOnly rfg.deobf('curse.maven:quark-rotn-edition-417392:8223948')
         runtimeOnly rfg.deobf('curse.maven:autoreglib-250363:2746011')
         runtimeOnly rfg.deobf('curse.maven:just-another-food-system-1758738:9283113')
+        runtimeOnly rfg.deobf('curse.maven:setworks-1768283:9339569')
+        // CraftTweaker defines the Setworks test sets in the development runtime.
+        runtimeOnly rfg.deobf('CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.716')
     }
 
     // Agent Diagnostics Toolkit, development runtime only; never packaged or declared.
     // The jar is not committed. Place it in libs/ before runClient or runServer:
-    //   agenttesttoolkit-1.2.0.jar, 248481 bytes
-    //   sha256 fbb9f55a731059e0b82b548bc2ea721e285268fafa30d1a469df9f1754bf5aa7
-    if (file('libs/agenttesttoolkit-1.2.0.jar').exists()) {
-        runtimeOnly rfg.deobf(files('libs/agenttesttoolkit-1.2.0.jar'))
+    //   agenttesttoolkit-1.3.0.jar, 334962 bytes
+    //   sha256 bb9e311297dca03e034283e77fa3c85e63e72345878f598bc00672cd69d39e57
+    if (file('libs/agenttesttoolkit-1.3.0.jar').exists()) {
+        runtimeOnly rfg.deobf(files('libs/agenttesttoolkit-1.3.0.jar'))
     }
 
     // Example - Dependency descriptor:

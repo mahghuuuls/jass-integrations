@@ -36,6 +36,7 @@ public final class Settings {
     /** Client only: draw the JASS values as a Quark-style icon row. */
     public final boolean quarkRowEnabled;
     public final boolean jafsEnabled;
+    public final boolean setworksEnabled;
     private final Map<String, WeaponValues> weaponTypes;
     private final Map<String, ShieldValues> shieldTiers;
     private final Map<String, Integer> materialTiers;
@@ -60,6 +61,7 @@ public final class Settings {
         boolean qualityToolsEnabled = true;
         boolean quarkRowEnabled = true;
         boolean jafsEnabled = true;
+        boolean setworksEnabled = true;
     }
 
     private Settings(Raw raw, Map<String, WeaponValues> weaponTypes, Map<String, ShieldValues> shieldTiers,
@@ -70,6 +72,7 @@ public final class Settings {
         this.qualityToolsEnabled = raw.qualityToolsEnabled;
         this.quarkRowEnabled = raw.quarkRowEnabled;
         this.jafsEnabled = raw.jafsEnabled;
+        this.setworksEnabled = raw.setworksEnabled;
         this.weaponTypes = weaponTypes;
         this.shieldTiers = shieldTiers;
         this.materialTiers = materialTiers;
@@ -99,6 +102,7 @@ public final class Settings {
         raw.qualityToolsEnabled = JassIntegrationsConfig.qualityTools.enabled;
         raw.quarkRowEnabled = JassIntegrationsConfig.quark.quarkRow;
         raw.jafsEnabled = JassIntegrationsConfig.jafs.enabled;
+        raw.setworksEnabled = JassIntegrationsConfig.setworks.enabled;
         List<String> warnings = new ArrayList<>();
         current = fromConfig(raw, warnings);
         return warnings;

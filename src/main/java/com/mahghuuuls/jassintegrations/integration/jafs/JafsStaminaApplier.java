@@ -4,6 +4,7 @@ import com.mahghuuuls.jafs.api.IPropertyApplier;
 import com.mahghuuuls.jass.api.JassApi;
 import com.mahghuuuls.jassintegrations.diagnostic.DebugLog;
 import com.mahghuuuls.jassintegrations.integration.stamina.StaminaBonusTotals;
+import com.mahghuuuls.jassintegrations.integration.stamina.StaminaProperty;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
@@ -23,7 +24,7 @@ final class JafsStaminaApplier {
     private final Map<UUID, StaminaBonusTotals> sums = new ConcurrentHashMap<>();
 
     /** The applier JAFS calls for one property. */
-    IPropertyApplier forProperty(JafsIntegration.Property property) {
+    IPropertyApplier forProperty(StaminaProperty property) {
         return (player, flatSum, percentSum) -> {
             StaminaBonusTotals now = update(player.getUniqueID(), property, flatSum, percentSum);
             if (now == null) {
@@ -40,11 +41,11 @@ final class JafsStaminaApplier {
      *
      * @return the player's new totals, or {@code null} when they did not change
      */
-    StaminaBonusTotals update(UUID player, JafsIntegration.Property property, double flatSum, double percentSum) {
+    StaminaBonusTotals update(UUID player, StaminaProperty property, double flatSum, double percentSum) {
         StaminaBonusTotals before = sums(player);
-        StaminaBonusTotals after = before.with(property.flat, flatSum);
-        if (property.percent != null) {
-            after = after.with(property.percent, percentSum);
+        StaminaBonusTotals after = before.with(property.bonus(false), flatSum);
+        if (property.supportsPercent()) {
+            after = after.with(property.bonus(true), percentSum);
         }
         if (after.equals(before)) {
             return null;
