@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0
+
+### Added
+
+- Setworks: the four stamina stats (`jassintegrations:max_stamina`, `jassintegrations:stamina_regeneration`, `jassintegrations:regeneration_delay_reduction`, `jassintegrations:stamina_efficiency`) as effects for modpack set bonuses, with the same units, ranges and names as the JAFS properties. A bonus lasts while Setworks counts it as active; generated bonus descriptions name each stat.
+- Config: `setworks.enabled` switch.
+
+### Compatibility
+
+- Optional Setworks 1.0.0 or later (tested 1.0.0). Requirements unchanged: JASS 1.0.0 or later and MixinBooter 10.7 or later.
+
 ## 1.1.0
 
 ### Added

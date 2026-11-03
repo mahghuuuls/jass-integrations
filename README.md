@@ -1,6 +1,6 @@
 # JASS Integrations
 
-An add-on for [Just Another Stamina System](https://github.com/mahghuuuls/jass) (JASS) for Minecraft 1.12.2. It gives Spartan Weaponry and Spartan Shields items stamina values by weapon type and shield tier, makes the Spartan shield bash and crossbow loading cost stamina, adds stamina attributes for Quality Tools qualities and stamina properties for Just Another Food System (JAFS) foods, and shows JASS tooltip values as an icon row in Quark: RotN Edition's style. It uses only the public JASS API.
+An add-on for [Just Another Stamina System](https://github.com/mahghuuuls/jass) (JASS) for Minecraft 1.12.2. It gives Spartan Weaponry and Spartan Shields items stamina values by weapon type and shield tier, makes the Spartan shield bash and crossbow loading cost stamina, adds stamina attributes for Quality Tools qualities and stamina properties for Just Another Food System (JAFS) foods and Setworks set bonuses, and shows JASS tooltip values as an icon row in Quark: RotN Edition's style. It uses only the public JASS API.
 
 - Player-facing description: [MOD-PAGE.md](MOD-PAGE.md)
 - Release history: [CHANGELOG.md](CHANGELOG.md)
@@ -8,10 +8,10 @@ An add-on for [Just Another Stamina System](https://github.com/mahghuuuls/jass) 
 
 ## Identity and installation
 
-- Mod ID `jassintegrations`, version 1.1.0, Forge 1.12.2 artifact. Developed and tested on Cleanroom.
+- Mod ID `jassintegrations`, version 1.2.0, Forge 1.12.2 artifact. Developed and tested on Cleanroom.
 - Required on the server and on every client.
 - Requires JASS 1.0.0 or later (tested 1.0.0 and 1.1.0) and MixinBooter 10.7 or later (Cleanroom includes it).
-- Integrations, each active only when its target mod is present: Spartan Weaponry (tested 1.6.1), Spartan Shields (tested 1.5.5), Quality Tools (tested 1.0.7), Quark: RotN Edition (tested r1.6-192), JAFS (tested 1.0.0). The startup log has one line per integration: running, switched off in the config, or target mod not installed.
+- Integrations, each active only when its target mod is present: Spartan Weaponry (tested 1.6.1), Spartan Shields (tested 1.5.5), Quality Tools (tested 1.0.7), Quark: RotN Edition (tested r1.6-192), JAFS (tested 1.0.0), Setworks (tested 1.0.0). The startup log has one line per integration: running, switched off in the config, or target mod not installed.
 
 ## Configuration
 
@@ -19,13 +19,14 @@ All settings live in `config/jassintegrations.cfg`. A JASS config entry for a si
 
 | Category | Keys |
 | --- | --- |
-| `general` | `debug_logging` (logs shield bash charges and refusals, crossbow loading, quality attribute changes, and JAFS stamina bonus changes) |
+| `general` | `debug_logging` (logs shield bash charges and refusals, crossbow loading, quality attribute changes, JAFS stamina bonus changes, and Setworks stamina bonus changes) |
 | `spartan_weaponry` | `enabled`, `weapon_types` |
 | `spartan_shields` | `enabled`, `shield_tiers`, `shield_materials`, `bash_cost` (default 8) |
 | `crossbow` | `loading_drain` (default 10 per second) |
 | `quality_tools` | `enabled` |
 | `quark` | `quark_row` (client) |
 | `jafs` | `enabled` |
+| `setworks` | `enabled` |
 
 Line formats, one entry per line:
 
@@ -68,12 +69,22 @@ Four properties, registered with JAFS at startup, usable by id in the `modifiers
 
 The units and signs are the same as the quality attributes. JAFS adds the amounts of all active foods, flat and percent separately, and checks each entry against its range when it loads the definitions; a percent total below -100 counts as -100. A bonus applies while JAFS keeps the food active, including after a reconnect and, with JAFS's `keepFoodsOnDeath`, after a respawn. This mod saves nothing; JAFS saves the foods. The values reach JASS through a contextual provider, `jassintegrations:jafs`, which `/stamina inspect` lists. With the JAFS integration switched off, the properties do not exist and JAFS reports foods that name them.
 
+## Setworks effects
+
+The same four stats, registered with Setworks as effect kinds under the same ids and ranges as the JAFS properties. A set bonus names them with two parameters, `operation` (`flat` or `percent`; `stamina_efficiency` is flat only) and `amount` (a plain decimal number), for example `.effect("jassintegrations:max_stamina", {operation: "percent", amount: "10"})`.
+
+- Setworks checks each effect when it loads the definitions. An unknown operation, a number it cannot read, or an amount outside the range disables the bonus and, by Setworks' rule, every set that bonus requires; the game log names the reason.
+- Active bonuses add up, flat and percent separately; a percent total below -100 counts as -100.
+- A bonus applies while Setworks counts it as active and ends when the bonus ends. Setworks applies its bonuses again at login, respawn and dimension change; a bonus that ended across a respawn or dimension change is dropped one tick later.
+- A bonus without its own description shows each effect by name, for example "+10% Maximum Stamina" (two decimal places at most).
+- The values reach JASS through a contextual provider, `jassintegrations:setworks`. With the Setworks integration switched off, Setworks reports these effects as unknown and disables their bonuses and sets.
+
 ## Compatibility notes
 
 - Spartan Shields: the bash cost is charged by a Mixin into Spartan Shields' bash packet handler; a client Mixin skips the arm swing when the bash will be refused. If either target method is missing, the bash cost stays off with one warning and the rest of the integration runs.
 - JASS refuses a mouse attack aimed at an entity or at air at 0 stamina, so a bash in that case is refused by JASS before Spartan Shields sees it.
 - Quark row: needs Quark's Visual Stat Display on. It replaces only the JASS value lines; JASS's modifier lines stay as text. With JASS's `item_tooltips=shift`, the row is not drawn and JASS's "Hold Shift" hint stays.
-- Action ids for JASS: `jassintegrations:shield_bash`, `jassintegrations:crossbow_load`. Provider ids: `jassintegrations:spartan_weaponry`, `jassintegrations:spartan_shields`, `jassintegrations:quality_tools`, `jassintegrations:jafs`.
+- Action ids for JASS: `jassintegrations:shield_bash`, `jassintegrations:crossbow_load`. Provider ids: `jassintegrations:spartan_weaponry`, `jassintegrations:spartan_shields`, `jassintegrations:quality_tools`, `jassintegrations:jafs`, `jassintegrations:setworks`.
 
 ## License
 

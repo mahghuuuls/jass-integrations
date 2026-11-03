@@ -55,6 +55,24 @@ Use them like any JAFS property in a food's modifiers:
 
 The bonus lasts while the food is active. A positive amount helps the player and a negative amount hurts. The food tooltip shows the line as "+10% Maximum Stamina".
 
+### [Setworks](https://www.curseforge.com/minecraft/mc-mods/setworks)
+
+This mod adds no sets. It adds the same four stamina stats as effects that modpack creators can put on their Setworks set bonuses:
+
+- `jassintegrations:max_stamina` (flat or percent)
+- `jassintegrations:stamina_regeneration` (flat per second, or percent)
+- `jassintegrations:regeneration_delay_reduction` (flat seconds, or percent)
+- `jassintegrations:stamina_efficiency` (flat)
+
+Use them in a bonus with `operation` and `amount`:
+
+```zenscript
+Setworks.bonus("mypack:iron_stamina").requires("mypack:iron_armor", 2)
+    .effect("jassintegrations:max_stamina", {operation: "percent", amount: "10"});
+```
+
+The bonus lasts while the set bonus is active. A bonus without its own description shows the line as "+10% Maximum Stamina". A value Setworks cannot use, such as an amount out of range, turns off that bonus and its set, and the game log says why.
+
 ## Configuration
 
 `config/jassintegrations.cfg` has a section for each integration, with a switch to turn it off and the values it uses. A JASS config entry for a single item always wins over these values. Switching an integration on or off needs a restart.
