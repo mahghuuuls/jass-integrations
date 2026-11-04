@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,15 +31,17 @@ class SetworksIntegrationTest {
     }
 
     private static SetworksStaminaEffect kind(StaminaProperty property) {
-        return new SetworksStaminaEffect(property, new SetworksStaminaEffects((player, bonusId) -> true));
+        return new SetworksStaminaEffect(property, new SetworksStaminaEffects());
     }
 
     @Test
-    void theFourKindsUseThePropertyIds() {
+    void theKindsUseThePropertyIds() {
         assertEquals("jassintegrations:max_stamina", kind(StaminaProperty.MAX_STAMINA).id());
         assertEquals("jassintegrations:stamina_regeneration", kind(StaminaProperty.STAMINA_REGENERATION).id());
         assertEquals("jassintegrations:regeneration_delay_reduction", kind(StaminaProperty.REGENERATION_DELAY_REDUCTION).id());
         assertEquals("jassintegrations:stamina_efficiency", kind(StaminaProperty.STAMINA_EFFICIENCY).id());
+        assertEquals("jassintegrations:shield_stability", kind(StaminaProperty.SHIELD_STABILITY).id());
+        assertEquals("jassintegrations:weight_reduction", kind(StaminaProperty.WEIGHT_REDUCTION).id());
     }
 
     @Test
@@ -92,20 +92,17 @@ class SetworksIntegrationTest {
                 kind(StaminaProperty.STAMINA_EFFICIENCY).describe(params("flat", "20")));
         assertEquals("+1000 ${property.jassintegrations.max_stamina}",
                 kind(StaminaProperty.MAX_STAMINA).describe(params("flat", "1000")));
-    }
-
-    @Test
-    void theBonusIdIsTheMiddleOfTheInstanceId() {
-        assertEquals("jit:iron_max", SetworksStaminaEffects.bonusIdOf("jit:iron/jit:iron_max/0"));
-        assertEquals("iron_max", SetworksStaminaEffects.bonusIdOf("iron/iron_max/2"));
-        assertNull(SetworksStaminaEffects.bonusIdOf("jit:iron_max"));
-        assertNull(SetworksStaminaEffects.bonusIdOf("a/b/c/d"));
-        assertNull(SetworksStaminaEffects.bonusIdOf("a//0"));
+        assertEquals("+20 ${property.jassintegrations.shield_stability}",
+                kind(StaminaProperty.SHIELD_STABILITY).describe(params("flat", "20")));
+        assertEquals("+50% ${property.jassintegrations.weight_reduction}",
+                kind(StaminaProperty.WEIGHT_REDUCTION).describe(params("percent", "50")));
+        assertEquals("+5 ${property.jassintegrations.weight_reduction}",
+                kind(StaminaProperty.WEIGHT_REDUCTION).describe(params("flat", "5")));
     }
 
     @Test
     void anInstanceCountsOnceAndTotalsAddUp() {
-        SetworksStaminaEffects effects = new SetworksStaminaEffects((player, bonusId) -> true);
+        SetworksStaminaEffects effects = new SetworksStaminaEffects();
         UUID player = UUID.randomUUID();
         assertTrue(effects.record(player, "jit:iron/jit:iron_max/0", StaminaBonus.MAX_STAMINA_PERCENT, 10));
         assertFalse(effects.record(player, "jit:iron/jit:iron_max/0", StaminaBonus.MAX_STAMINA_PERCENT, 10),
@@ -124,65 +121,32 @@ class SetworksIntegrationTest {
     }
 
     @Test
-    void anEndedBonusIsDroppedAfterARebuildAndReportedAgainWhenItReturns() {
-        SetworksStaminaEffects effects = new SetworksStaminaEffects((player, bonusId) -> true);
-        UUID player = UUID.randomUUID();
-        effects.record(player, "jit:iron/jit:iron_max/0", StaminaBonus.MAX_STAMINA_PERCENT, 10);
-        effects.record(player, "jit:iron/jit:iron_dim/0", StaminaBonus.MAX_STAMINA_FLAT, 20);
-
-        Set<String> active = new HashSet<>();
-        active.add("jit:iron_max");
-        // A rebuild without withdraw: jit:iron_dim ended, its instance is still recorded.
-        assertTrue(effects.dropInactive(player, active::contains));
-        assertEquals(0.0, effects.totals(player).get(StaminaBonus.MAX_STAMINA_FLAT), EPSILON);
-        assertEquals(10.0, effects.totals(player).get(StaminaBonus.MAX_STAMINA_PERCENT), EPSILON, "active bonuses stay");
-        assertFalse(effects.dropInactive(player, active::contains), "nothing left to drop");
-
-        assertTrue(effects.record(player, "jit:iron/jit:iron_dim/0", StaminaBonus.MAX_STAMINA_FLAT, 20),
-                "the bonus becoming active again is a change JASS must hear about");
+    void theShieldAndWeightKindsCheckTheirOwnRanges() {
+        assertNull(kind(StaminaProperty.SHIELD_STABILITY).validate(params("flat", "-1000")));
+        assertTrue(kind(StaminaProperty.SHIELD_STABILITY).validate(params("percent", "10")).contains("operation must be flat"));
+        assertNull(kind(StaminaProperty.WEIGHT_REDUCTION).validate(params("flat", "100")));
+        assertNotNull(kind(StaminaProperty.WEIGHT_REDUCTION).validate(params("flat", "101")));
+        assertNull(kind(StaminaProperty.WEIGHT_REDUCTION).validate(params("percent", "-100")));
+        assertTrue(kind(StaminaProperty.WEIGHT_REDUCTION).validate(params("percent", "150")).contains("outside -100 to 100"));
     }
 
     @Test
-    void theDropRunsOnlyAtTheFirstTickAfterARebuild() {
-        SetworksStaminaEffects effects = new SetworksStaminaEffects((player, bonusId) -> true);
+    void aWithdrawnInstanceStopsCountingAndCountsAgainWhenReapplied() {
+        SetworksStaminaEffects effects = new SetworksStaminaEffects();
         UUID player = UUID.randomUUID();
-        effects.record(player, "jit:iron/jit:iron_dim/0", StaminaBonus.MAX_STAMINA_FLAT, 20);
-        assertFalse(effects.tickEnded(player, bonusId -> false), "no rebuild, no drop");
-        assertEquals(20.0, effects.totals(player).get(StaminaBonus.MAX_STAMINA_FLAT), EPSILON);
-
-        effects.rebuilt(player);
-        assertTrue(effects.tickEnded(player, bonusId -> false), "the first tick after a rebuild drops the ended bonus");
-        assertEquals(0.0, effects.totals(player).get(StaminaBonus.MAX_STAMINA_FLAT), EPSILON);
-
-        effects.record(player, "jit:iron/jit:iron_dim/0", StaminaBonus.MAX_STAMINA_FLAT, 20);
-        assertFalse(effects.tickEnded(player, bonusId -> false), "only once per rebuild");
-
-        effects.rebuilt(player);
-        effects.forgetPlayer(player);
-        assertFalse(effects.tickEnded(player, bonusId -> false), "logout cancels the pending drop");
-    }
-
-    @Test
-    void theBonusIdIsTakenFromTheInstanceIdWhenRecorded() {
-        SetworksStaminaEffects effects = new SetworksStaminaEffects((player, bonusId) -> true);
-        UUID player = UUID.randomUUID();
-        effects.record(player, "jit:iron/jit:iron_max/0", StaminaBonus.MAX_STAMINA_PERCENT, 10);
-        effects.record(player, "odd", StaminaBonus.STAMINA_EFFICIENCY, 20);
-        Set<String> asked = new HashSet<>();
-        effects.dropInactive(player, bonusId -> {
-            asked.add(bonusId);
-            return false;
-        });
-        assertEquals(Collections.singleton("jit:iron_max"), asked, "the drop asks Setworks by bonus id");
-        assertEquals(0.0, effects.totals(player).get(StaminaBonus.MAX_STAMINA_PERCENT), EPSILON);
-        assertEquals(20.0, effects.totals(player).get(StaminaBonus.STAMINA_EFFICIENCY), EPSILON,
-                "an instance id of another shape stays");
+        effects.record(player, "jit:iron/jit:iron_guard/0", StaminaBonus.SHIELD_STABILITY, 20);
+        effects.record(player, "jit:iron/jit:iron_guard/1", StaminaBonus.WEIGHT_REDUCTION_PERCENT, 50);
+        assertTrue(effects.forget(player, "jit:iron/jit:iron_guard/0"), "a withdraw removes only its own instance");
+        assertEquals(0.0, effects.totals(player).get(StaminaBonus.SHIELD_STABILITY), EPSILON);
+        assertEquals(50.0, effects.totals(player).get(StaminaBonus.WEIGHT_REDUCTION_PERCENT), EPSILON);
+        assertTrue(effects.record(player, "jit:iron/jit:iron_guard/0", StaminaBonus.SHIELD_STABILITY, 20),
+                "applied again, it counts again");
         assertEquals(StaminaBonusTotals.NONE, effects.totals(UUID.randomUUID()), "players are kept apart");
     }
 
     @Test
     void theMixedBonusReachesJassWithTheSharedMapping() {
-        SetworksStaminaEffects effects = new SetworksStaminaEffects((player, bonusId) -> true);
+        SetworksStaminaEffects effects = new SetworksStaminaEffects();
         UUID player = UUID.randomUUID();
         effects.record(player, "jit:iron/jit:iron_mixed/0", StaminaBonus.REGENERATION_FLAT, 5);
         effects.record(player, "jit:iron/jit:iron_mixed/1", StaminaBonus.DELAY_REDUCTION_FLAT, 0.25);

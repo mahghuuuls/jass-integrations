@@ -65,6 +65,9 @@ class QualityAttributesTest {
         // Worlds save these names; they are the 1.0.0 names.
         assertEquals("jassintegrations.max_stamina_percent", QualityAttributes.Kind.MAX_STAMINA_PERCENT.attributeName());
         assertEquals("jassintegrations.delay_reduction_flat", QualityAttributes.Kind.DELAY_REDUCTION_FLAT.attributeName());
+        assertEquals("jassintegrations.shield_stability", QualityAttributes.Kind.SHIELD_STABILITY.attributeName());
+        assertEquals("jassintegrations.weight_reduction_flat", QualityAttributes.Kind.WEIGHT_REDUCTION_FLAT.attributeName());
+        assertEquals("jassintegrations.weight_reduction_percent", QualityAttributes.Kind.WEIGHT_REDUCTION_PERCENT.attributeName());
     }
 
     @Test

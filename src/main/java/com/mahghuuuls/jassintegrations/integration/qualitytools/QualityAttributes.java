@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 /**
- * The seven quality attributes. Quality Tools finds an attribute by its name on the entity, so each
+ * The quality attributes. Quality Tools finds an attribute by its name on the entity, so each
  * one is installed on every player and needs no Quality Tools class. Only this class knows the names
  * and that only modifiers with operation 0 (add the amount) count.
  */
@@ -38,7 +38,10 @@ public final class QualityAttributes {
         REGENERATION_PERCENT("regeneration_percent", StaminaBonus.REGENERATION_PERCENT),
         DELAY_REDUCTION_FLAT("delay_reduction_flat", StaminaBonus.DELAY_REDUCTION_FLAT),
         DELAY_REDUCTION_PERCENT("delay_reduction_percent", StaminaBonus.DELAY_REDUCTION_PERCENT),
-        STAMINA_EFFICIENCY("stamina_efficiency", StaminaBonus.STAMINA_EFFICIENCY);
+        STAMINA_EFFICIENCY("stamina_efficiency", StaminaBonus.STAMINA_EFFICIENCY),
+        SHIELD_STABILITY("shield_stability", StaminaBonus.SHIELD_STABILITY),
+        WEIGHT_REDUCTION_FLAT("weight_reduction_flat", StaminaBonus.WEIGHT_REDUCTION_FLAT),
+        WEIGHT_REDUCTION_PERCENT("weight_reduction_percent", StaminaBonus.WEIGHT_REDUCTION_PERCENT);
 
         final String key;
         final StaminaBonus bonus;

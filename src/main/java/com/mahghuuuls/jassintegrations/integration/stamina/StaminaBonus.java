@@ -11,7 +11,10 @@ public enum StaminaBonus {
     REGENERATION_PERCENT("regeneration_percent"),
     DELAY_REDUCTION_FLAT("delay_reduction_flat"),
     DELAY_REDUCTION_PERCENT("delay_reduction_percent"),
-    STAMINA_EFFICIENCY("stamina_efficiency");
+    STAMINA_EFFICIENCY("stamina_efficiency"),
+    SHIELD_STABILITY("shield_stability"),
+    WEIGHT_REDUCTION_FLAT("weight_reduction_flat"),
+    WEIGHT_REDUCTION_PERCENT("weight_reduction_percent");
 
     /** Name used in log lines, for example {@code max_stamina_percent}. */
     public final String key;

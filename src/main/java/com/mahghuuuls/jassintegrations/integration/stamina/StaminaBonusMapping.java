@@ -42,6 +42,17 @@ public final class StaminaBonusMapping {
         }
         // A total below 0 counts as 0 in JASS, across every source, so it is not clamped here.
         c.efficiency(finite(totals.get(StaminaBonus.STAMINA_EFFICIENCY)));
+        // JASS never lets a block's Stability go below 0, so a negative bonus is not clamped here.
+        c.stability(finite(totals.get(StaminaBonus.SHIELD_STABILITY)));
+        // A weight reduction makes the player lighter, so its sign is the opposite of JASS's flat weight.
+        c.flatWeight(-finite(totals.get(StaminaBonus.WEIGHT_REDUCTION_FLAT)));
+        double weightPercent = percent(totals.get(StaminaBonus.WEIGHT_REDUCTION_PERCENT));
+        if (weightPercent >= 0.0) {
+            // Above 100 percent JASS counts the reduction as 100 percent: no weight.
+            c.weightReduction(weightPercent / 100.0);
+        } else {
+            c.weightIncrease(-weightPercent / 100.0);
+        }
         return c.build();
     }
 

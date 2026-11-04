@@ -19,12 +19,14 @@ class StaminaPropertyTest {
     private static final double EPSILON = 1e-9;
 
     @Test
-    void theFourPropertiesHaveTheApprovedIds() {
+    void theSixPropertiesHaveTheApprovedIds() {
         assertEquals("jassintegrations:max_stamina", StaminaProperty.MAX_STAMINA.id());
         assertEquals("jassintegrations:stamina_regeneration", StaminaProperty.STAMINA_REGENERATION.id());
         assertEquals("jassintegrations:regeneration_delay_reduction", StaminaProperty.REGENERATION_DELAY_REDUCTION.id());
         assertEquals("jassintegrations:stamina_efficiency", StaminaProperty.STAMINA_EFFICIENCY.id());
-        assertEquals(4, StaminaProperty.values().length);
+        assertEquals("jassintegrations:shield_stability", StaminaProperty.SHIELD_STABILITY.id());
+        assertEquals("jassintegrations:weight_reduction", StaminaProperty.WEIGHT_REDUCTION.id());
+        assertEquals(6, StaminaProperty.values().length);
     }
 
     @Test
@@ -38,6 +40,16 @@ class StaminaPropertyTest {
         assertFalse(StaminaProperty.STAMINA_EFFICIENCY.supportsPercent());
         assertNull(StaminaProperty.STAMINA_EFFICIENCY.bonus(true));
         assertTrue(StaminaProperty.STAMINA_REGENERATION.supportsPercent());
+        assertFalse(StaminaProperty.SHIELD_STABILITY.supportsPercent());
+        assertEquals(StaminaBonus.SHIELD_STABILITY, StaminaProperty.SHIELD_STABILITY.bonus(false));
+        assertEquals(-1000.0, StaminaProperty.SHIELD_STABILITY.minimum(false), EPSILON);
+        assertEquals(1000.0, StaminaProperty.SHIELD_STABILITY.maximum(false), EPSILON);
+        assertEquals(StaminaBonus.WEIGHT_REDUCTION_FLAT, StaminaProperty.WEIGHT_REDUCTION.bonus(false));
+        assertEquals(StaminaBonus.WEIGHT_REDUCTION_PERCENT, StaminaProperty.WEIGHT_REDUCTION.bonus(true));
+        assertEquals(-100.0, StaminaProperty.WEIGHT_REDUCTION.minimum(false), EPSILON);
+        assertEquals(100.0, StaminaProperty.WEIGHT_REDUCTION.maximum(false), EPSILON);
+        assertEquals(-100.0, StaminaProperty.WEIGHT_REDUCTION.minimum(true), EPSILON);
+        assertEquals(100.0, StaminaProperty.WEIGHT_REDUCTION.maximum(true), EPSILON);
     }
 
     @Test

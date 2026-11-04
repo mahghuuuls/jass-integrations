@@ -14,7 +14,10 @@ public enum StaminaProperty {
             StaminaBonus.REGENERATION_PERCENT, -100, 1000),
     REGENERATION_DELAY_REDUCTION("regeneration_delay_reduction", "s", StaminaBonus.DELAY_REDUCTION_FLAT, -60, 60,
             StaminaBonus.DELAY_REDUCTION_PERCENT, -100, 100),
-    STAMINA_EFFICIENCY("stamina_efficiency", "", StaminaBonus.STAMINA_EFFICIENCY, -1000, 1000);
+    STAMINA_EFFICIENCY("stamina_efficiency", "", StaminaBonus.STAMINA_EFFICIENCY, -1000, 1000),
+    SHIELD_STABILITY("shield_stability", "", StaminaBonus.SHIELD_STABILITY, -1000, 1000),
+    WEIGHT_REDUCTION("weight_reduction", "", StaminaBonus.WEIGHT_REDUCTION_FLAT, -100, 100,
+            StaminaBonus.WEIGHT_REDUCTION_PERCENT, -100, 100);
 
     /** Id path, for example {@code max_stamina}. */
     public final String path;

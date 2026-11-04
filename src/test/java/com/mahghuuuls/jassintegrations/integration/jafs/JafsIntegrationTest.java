@@ -40,6 +40,8 @@ class JafsIntegrationTest {
         assertEquals("/s", spec(StaminaProperty.STAMINA_REGENERATION).unit());
         assertEquals("s", spec(StaminaProperty.REGENERATION_DELAY_REDUCTION).unit());
         assertEquals("", spec(StaminaProperty.STAMINA_EFFICIENCY).unit());
+        assertEquals("", spec(StaminaProperty.SHIELD_STABILITY).unit());
+        assertEquals("", spec(StaminaProperty.WEIGHT_REDUCTION).unit());
         for (StaminaProperty property : StaminaProperty.values()) {
             assertEquals("yellow", spec(property).color(), property.toString());
         }
@@ -67,13 +69,15 @@ class JafsIntegrationTest {
     }
 
     @Test
-    void theFourPropertiesHaveTheApprovedIds() {
+    void theSixPropertiesHaveTheApprovedIds() {
         assertEquals("jassintegrations:max_stamina", spec(StaminaProperty.MAX_STAMINA).id());
         assertEquals("jassintegrations:stamina_regeneration", spec(StaminaProperty.STAMINA_REGENERATION).id());
         assertEquals("jassintegrations:regeneration_delay_reduction",
                 spec(StaminaProperty.REGENERATION_DELAY_REDUCTION).id());
         assertEquals("jassintegrations:stamina_efficiency", spec(StaminaProperty.STAMINA_EFFICIENCY).id());
-        assertEquals(4, StaminaProperty.values().length);
+        assertEquals("jassintegrations:shield_stability", spec(StaminaProperty.SHIELD_STABILITY).id());
+        assertEquals("jassintegrations:weight_reduction", spec(StaminaProperty.WEIGHT_REDUCTION).id());
+        assertEquals(6, StaminaProperty.values().length);
     }
 
     @Test
@@ -86,6 +90,10 @@ class JafsIntegrationTest {
         assertRange(StaminaProperty.REGENERATION_DELAY_REDUCTION, PropertyOperation.PERCENT, -100, 100);
         assertRange(StaminaProperty.STAMINA_EFFICIENCY, PropertyOperation.FLAT, -1000, 1000);
         assertFalse(spec(StaminaProperty.STAMINA_EFFICIENCY).supports(PropertyOperation.PERCENT));
+        assertRange(StaminaProperty.SHIELD_STABILITY, PropertyOperation.FLAT, -1000, 1000);
+        assertFalse(spec(StaminaProperty.SHIELD_STABILITY).supports(PropertyOperation.PERCENT));
+        assertRange(StaminaProperty.WEIGHT_REDUCTION, PropertyOperation.FLAT, -100, 100);
+        assertRange(StaminaProperty.WEIGHT_REDUCTION, PropertyOperation.PERCENT, -100, 100);
     }
 
     private static void assertRange(StaminaProperty property, PropertyOperation operation, double min, double max) {

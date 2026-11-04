@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION,
-        dependencies = "required-after:jass@[1.0.0,);required-after:mixinbooter@[10.7,);"
+        dependencies = "required-after:jass@[1.2.0,);required-after:mixinbooter@[10.7,);"
                 + "after:spartanweaponry;after:spartanshields;after:qualitytools;after:quark;after:jafs;after:setworks")
 public class JassIntegrationsMod {
 

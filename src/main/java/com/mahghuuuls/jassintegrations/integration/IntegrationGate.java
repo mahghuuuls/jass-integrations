@@ -173,6 +173,11 @@ public final class IntegrationGate {
         }
     }
 
+    /** Whether a class is on the class path, checked without initializing it. */
+    public static boolean hasClass(String className) {
+        return missingClasses(Collections.singletonList(className)).isEmpty();
+    }
+
     /** Whether a class (loaded without initializing it) implements an interface; {@code false} when the class is missing. */
     public static boolean implementsInterface(String className, Class<?> marker) {
         try {

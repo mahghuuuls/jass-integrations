@@ -37,6 +37,26 @@ class StaminaBonusMappingTest {
     }
 
     @Test
+    void aShieldStabilityBonusKeepsItsSign() {
+        assertEquals(20.0, map(StaminaBonus.SHIELD_STABILITY, 20).getStability(), EPSILON);
+        assertEquals(-20.0, map(StaminaBonus.SHIELD_STABILITY, -20).getStability(), EPSILON);
+    }
+
+    @Test
+    void aWeightReductionMakesThePlayerLighter() {
+        assertEquals(-5.0, map(StaminaBonus.WEIGHT_REDUCTION_FLAT, 5).getFlatWeight(), EPSILON);
+        assertEquals(5.0, map(StaminaBonus.WEIGHT_REDUCTION_FLAT, -5).getFlatWeight(), EPSILON);
+        StaminaContribution lighter = map(StaminaBonus.WEIGHT_REDUCTION_PERCENT, 50);
+        assertEquals(0.5, lighter.getWeightReduction(), EPSILON);
+        assertEquals(0.0, lighter.getWeightIncrease(), EPSILON);
+        StaminaContribution heavier = map(StaminaBonus.WEIGHT_REDUCTION_PERCENT, -50);
+        assertEquals(0.0, heavier.getWeightReduction(), EPSILON);
+        assertEquals(0.5, heavier.getWeightIncrease(), EPSILON);
+        assertEquals(1.0, map(StaminaBonus.WEIGHT_REDUCTION_PERCENT, -400).getWeightIncrease(), EPSILON,
+                "a percent sum below -100 counts as -100");
+    }
+
+    @Test
     void aDelayReductionShortensTheDelay() {
         // JASS base delay 0.75 s: a 0.25 s reduction leaves 0.5 s.
         assertEquals(-0.25, map(StaminaBonus.DELAY_REDUCTION_FLAT, 0.25).getFlatDelay(), EPSILON);

@@ -23,6 +23,7 @@ public final class SetworksIntegration implements IntegrationGate.Integration {
     static final ResourceLocation PROVIDER_ID = new ResourceLocation(Tags.MOD_ID, "setworks");
 
     private static final String API = "com.mahghuuuls.setworks.api.SetworksApi";
+    private static final String WITHDRAW_REASON = "com.mahghuuuls.setworks.api.WithdrawReason";
 
     @Override
     public List<String> compatibilityProblems() {
@@ -30,12 +31,10 @@ public final class SetworksIntegration implements IntegrationGate.Integration {
         if (!IntegrationGate.hasMethod(API, "registerEffectKind", "com.mahghuuuls.setworks.api.IEffectKind")) {
             problems.add("SetworksApi.registerEffectKind(IEffectKind) not found");
         }
-        if (!IntegrationGate.hasMethod(API, "query")) {
-            problems.add("SetworksApi.query() not found");
-        }
-        if (!IntegrationGate.hasMethod("com.mahghuuuls.setworks.api.ISetworksQuery", "isActive",
-                "net.minecraft.entity.player.EntityPlayer", "java.lang.String")) {
-            problems.add("ISetworksQuery.isActive(EntityPlayer, String) not found");
+        // Setworks 1.1.0 withdraws an effect whose bonus ends across a respawn or dimension change;
+        // 1.0.0 did not, and this integration no longer covers that case itself.
+        if (!IntegrationGate.hasClass(WITHDRAW_REASON)) {
+            problems.add("Setworks 1.1.0 or later needed (" + WITHDRAW_REASON + " not found)");
         }
         return problems;
     }
@@ -47,8 +46,7 @@ public final class SetworksIntegration implements IntegrationGate.Integration {
      */
     @Override
     public void start() {
-        SetworksStaminaEffects effects = new SetworksStaminaEffects(
-                (player, bonusId) -> SetworksApi.query().isActive(player, bonusId));
+        SetworksStaminaEffects effects = new SetworksStaminaEffects();
         JassApi.registerContextualProvider(PROVIDER_ID, new SetworksStaminaProvider(effects));
         MinecraftForge.EVENT_BUS.register(effects);
         for (StaminaProperty property : StaminaProperty.values()) {
