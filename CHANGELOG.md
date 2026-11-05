@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.3.0
+
+### Added
+
+- Two stats from JASS 1.2.0 for Quality Tools qualities, JAFS foods and Setworks set bonuses: Shield Stability (`jassintegrations:shield_stability`, flat; quality attribute `jassintegrations.shield_stability`) adds Stability to every shield block, and Weight Reduction (`jassintegrations:weight_reduction`, flat or percent; quality attributes `jassintegrations.weight_reduction_flat` and `jassintegrations.weight_reduction_percent`) lowers the player's weight. Tooltips and generated set bonus descriptions name both.
+
+### Changed
+
+- Setworks: a bonus that ends at a respawn or dimension change now ends through Setworks 1.1.0 itself; this mod's own check one tick later is removed.
+
+### Compatibility
+
+- Requires JASS 1.2.0 or later (was 1.0.0). The Setworks integration needs Setworks 1.1.0 or later (tested 1.1.0); with Setworks 1.0.0 it turns off with one warning. MixinBooter 10.7 or later, unchanged.
+
 ## 1.2.0
 
 ### Added

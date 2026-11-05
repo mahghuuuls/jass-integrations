@@ -25,6 +25,10 @@ This mod adds no qualities. It adds stamina attributes that modpack creators can
 - `jassintegrations.regeneration_flat` and `jassintegrations.regeneration_percent`
 - `jassintegrations.delay_reduction_flat` (seconds) and `jassintegrations.delay_reduction_percent`
 - `jassintegrations.stamina_efficiency`
+- `jassintegrations.shield_stability`
+- `jassintegrations.weight_reduction_flat` and `jassintegrations.weight_reduction_percent`
+
+Shield Stability adds Stability to every shield block, so blocks cost less stamina. Weight Reduction makes the player lighter, so sprinting, jumping and dodging cost less.
 
 Use them like any attribute in a quality, with operation `0`:
 
@@ -46,6 +50,8 @@ This mod adds no foods. It adds stamina properties that modpack creators can put
 - `jassintegrations:stamina_regeneration` (flat per second, or percent)
 - `jassintegrations:regeneration_delay_reduction` (flat seconds, or percent)
 - `jassintegrations:stamina_efficiency` (flat)
+- `jassintegrations:shield_stability` (flat)
+- `jassintegrations:weight_reduction` (flat or percent)
 
 Use them like any JAFS property in a food's modifiers:
 
@@ -57,12 +63,14 @@ The bonus lasts while the food is active. A positive amount helps the player and
 
 ### [Setworks](https://www.curseforge.com/minecraft/mc-mods/setworks)
 
-This mod adds no sets. It adds the same four stamina stats as effects that modpack creators can put on their Setworks set bonuses:
+This mod adds no sets. It adds the same stamina stats as effects that modpack creators can put on their Setworks set bonuses:
 
 - `jassintegrations:max_stamina` (flat or percent)
 - `jassintegrations:stamina_regeneration` (flat per second, or percent)
 - `jassintegrations:regeneration_delay_reduction` (flat seconds, or percent)
 - `jassintegrations:stamina_efficiency` (flat)
+- `jassintegrations:shield_stability` (flat)
+- `jassintegrations:weight_reduction` (flat or percent)
 
 Use them in a bonus with `operation` and `amount`:
 
@@ -71,7 +79,7 @@ Setworks.bonus("mypack:iron_stamina").requires("mypack:iron_armor", 2)
     .effect("jassintegrations:max_stamina", {operation: "percent", amount: "10"});
 ```
 
-The bonus lasts while the set bonus is active. A bonus without its own description shows the line as "+10% Maximum Stamina". A value Setworks cannot use, such as an amount out of range, turns off that bonus and its set, and the game log says why.
+The bonus lasts while the set bonus is active. A bonus without its own description shows the line as "+10% Maximum Stamina". A value Setworks cannot use, such as an amount out of range, turns off that bonus and its set, and the game log says why. Needs Setworks 1.1.0 or newer.
 
 ## Configuration
 
@@ -79,6 +87,6 @@ The bonus lasts while the set bonus is active. A bonus without its own descripti
 
 ## Installation
 
-Install on the server and on every client. Requires JASS and [MixinBooter](https://www.curseforge.com/minecraft/mc-mods/mixin-booter) 10.7 or newer (Cleanroom already includes MixinBooter).
+Install on the server and on every client. Requires JASS 1.2.0 or newer and [MixinBooter](https://www.curseforge.com/minecraft/mc-mods/mixin-booter) 10.7 or newer (Cleanroom already includes MixinBooter).
 
 Source code: [github.com/mahghuuuls/jass-integrations](https://github.com/mahghuuuls/jass-integrations)
