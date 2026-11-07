@@ -63,12 +63,14 @@ dependencies {
     compileOnly rfg.deobf('curse.maven:quality-tools-264756:2732994')
     compileOnly rfg.deobf('curse.maven:just-another-food-system-1758738:9283113')
     compileOnly rfg.deobf('curse.maven:setworks-1768283:9434914')
+    compileOnly rfg.deobf('CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.718')
     // Tests check the Spartan Weaponry class names the weapon-type table relies on.
     testImplementation rfg.deobf('curse.maven:spartan-weaponry-278141:6839689')
     // Tests check the Spartan Shields methods the shield bash Mixins patch.
     testImplementation rfg.deobf('curse.maven:spartan-shields-252239:3567495')
     testImplementation rfg.deobf('curse.maven:just-another-food-system-1758738:9283113')
     testImplementation rfg.deobf('curse.maven:setworks-1768283:9434914')
+    testImplementation rfg.deobf('CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.718')
 
     // Development runtime with the target mods, opt-in: set dev_runtime_targets = true in gradle.properties.
     if (propertyBool('dev_runtime_targets')) {
@@ -80,16 +82,16 @@ dependencies {
         runtimeOnly rfg.deobf('curse.maven:autoreglib-250363:2746011')
         runtimeOnly rfg.deobf('curse.maven:just-another-food-system-1758738:9283113')
         runtimeOnly rfg.deobf('curse.maven:setworks-1768283:9434914')
-        // CraftTweaker defines the Setworks test sets in the development runtime.
-        runtimeOnly rfg.deobf('CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.716')
+        // CraftTweaker runs the stamina test scripts and defines the Setworks test sets.
+        runtimeOnly rfg.deobf('CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.718')
     }
 
     // Agent Diagnostics Toolkit, development runtime only; never packaged or declared.
     // The jar is not committed. Place it in libs/ before runClient or runServer:
-    //   agenttesttoolkit-1.5.0.jar, 513446 bytes
-    //   sha256 1b11c8e5ec088c08aaacd5e59f3654c498e3c62aaf59e3508907c64ca253702d
-    if (file('libs/agenttesttoolkit-1.5.0.jar').exists()) {
-        runtimeOnly rfg.deobf(files('libs/agenttesttoolkit-1.5.0.jar'))
+    //   agenttesttoolkit-1.6.0.jar, 515225 bytes
+    //   sha256 dc23d8c23f03eec18417cca99c870d3af75e8d29c3ebd4ca45c57b9dba44789c
+    if (file('libs/agenttesttoolkit-1.6.0.jar').exists()) {
+        runtimeOnly rfg.deobf(files('libs/agenttesttoolkit-1.6.0.jar'))
     }
 
     // Example - Dependency descriptor:

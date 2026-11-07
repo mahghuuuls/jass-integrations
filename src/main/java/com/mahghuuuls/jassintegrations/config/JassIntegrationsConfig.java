@@ -37,6 +37,9 @@ public final class JassIntegrationsConfig {
     @Config.Name("setworks")
     public static final Setworks setworks = new Setworks();
 
+    @Config.Name("crafttweaker")
+    public static final CraftTweaker craftTweaker = new CraftTweaker();
+
     public static final class General {
 
         @Config.Name("debug_logging")
@@ -133,6 +136,16 @@ public final class JassIntegrationsConfig {
         @Config.Comment({
                 "If false, the jassintegrations:* Setworks effects are not registered, so Setworks disables the bonuses that",
                 "name them, and every set those bonuses need, and reports why. This mod adds no sets of its own. Needs a restart."})
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
+    }
+
+    public static final class CraftTweaker {
+
+        @Config.Name("enabled")
+        @Config.Comment({
+                "If false, the CraftTweaker class mods.jassintegrations.Stamina is not registered, so scripts that use it",
+                "report it as unknown. Needs a restart."})
         @Config.RequiresMcRestart
         public boolean enabled = true;
     }

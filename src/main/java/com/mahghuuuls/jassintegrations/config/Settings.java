@@ -37,6 +37,7 @@ public final class Settings {
     public final boolean quarkRowEnabled;
     public final boolean jafsEnabled;
     public final boolean setworksEnabled;
+    public final boolean craftTweakerEnabled;
     private final Map<String, WeaponValues> weaponTypes;
     private final Map<String, ShieldValues> shieldTiers;
     private final Map<String, Integer> materialTiers;
@@ -62,6 +63,7 @@ public final class Settings {
         boolean quarkRowEnabled = true;
         boolean jafsEnabled = true;
         boolean setworksEnabled = true;
+        boolean craftTweakerEnabled = true;
     }
 
     private Settings(Raw raw, Map<String, WeaponValues> weaponTypes, Map<String, ShieldValues> shieldTiers,
@@ -73,6 +75,7 @@ public final class Settings {
         this.quarkRowEnabled = raw.quarkRowEnabled;
         this.jafsEnabled = raw.jafsEnabled;
         this.setworksEnabled = raw.setworksEnabled;
+        this.craftTweakerEnabled = raw.craftTweakerEnabled;
         this.weaponTypes = weaponTypes;
         this.shieldTiers = shieldTiers;
         this.materialTiers = materialTiers;
@@ -103,6 +106,7 @@ public final class Settings {
         raw.quarkRowEnabled = JassIntegrationsConfig.quark.quarkRow;
         raw.jafsEnabled = JassIntegrationsConfig.jafs.enabled;
         raw.setworksEnabled = JassIntegrationsConfig.setworks.enabled;
+        raw.craftTweakerEnabled = JassIntegrationsConfig.craftTweaker.enabled;
         List<String> warnings = new ArrayList<>();
         current = fromConfig(raw, warnings);
         return warnings;
