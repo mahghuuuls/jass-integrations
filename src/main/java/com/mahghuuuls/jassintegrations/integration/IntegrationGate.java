@@ -32,7 +32,9 @@ public final class IntegrationGate {
             new Entry("Setworks", "setworks", s -> s.setworksEnabled,
                     "com.mahghuuuls.jassintegrations.integration.setworks.SetworksIntegration"),
             new Entry("CraftTweaker", "crafttweaker", s -> s.craftTweakerEnabled,
-                    "com.mahghuuuls.jassintegrations.integration.crafttweaker.CraftTweakerIntegration")
+                    "com.mahghuuuls.jassintegrations.integration.crafttweaker.CraftTweakerIntegration"),
+            new Entry("Statusworks", "statusworks", s -> s.statusworksEnabled,
+                    "com.mahghuuuls.jassintegrations.integration.statusworks.StatusworksIntegration")
     ));
 
     private static final List<Integration> started = new ArrayList<>();

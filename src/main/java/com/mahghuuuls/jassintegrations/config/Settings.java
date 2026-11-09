@@ -38,6 +38,7 @@ public final class Settings {
     public final boolean jafsEnabled;
     public final boolean setworksEnabled;
     public final boolean craftTweakerEnabled;
+    public final boolean statusworksEnabled;
     private final Map<String, WeaponValues> weaponTypes;
     private final Map<String, ShieldValues> shieldTiers;
     private final Map<String, Integer> materialTiers;
@@ -64,6 +65,7 @@ public final class Settings {
         boolean jafsEnabled = true;
         boolean setworksEnabled = true;
         boolean craftTweakerEnabled = true;
+        boolean statusworksEnabled = true;
     }
 
     private Settings(Raw raw, Map<String, WeaponValues> weaponTypes, Map<String, ShieldValues> shieldTiers,
@@ -76,6 +78,7 @@ public final class Settings {
         this.jafsEnabled = raw.jafsEnabled;
         this.setworksEnabled = raw.setworksEnabled;
         this.craftTweakerEnabled = raw.craftTweakerEnabled;
+        this.statusworksEnabled = raw.statusworksEnabled;
         this.weaponTypes = weaponTypes;
         this.shieldTiers = shieldTiers;
         this.materialTiers = materialTiers;
@@ -107,6 +110,7 @@ public final class Settings {
         raw.jafsEnabled = JassIntegrationsConfig.jafs.enabled;
         raw.setworksEnabled = JassIntegrationsConfig.setworks.enabled;
         raw.craftTweakerEnabled = JassIntegrationsConfig.craftTweaker.enabled;
+        raw.statusworksEnabled = JassIntegrationsConfig.statusworks.enabled;
         List<String> warnings = new ArrayList<>();
         current = fromConfig(raw, warnings);
         return warnings;

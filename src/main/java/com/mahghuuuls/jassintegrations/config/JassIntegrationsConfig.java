@@ -40,6 +40,9 @@ public final class JassIntegrationsConfig {
     @Config.Name("crafttweaker")
     public static final CraftTweaker craftTweaker = new CraftTweaker();
 
+    @Config.Name("statusworks")
+    public static final Statusworks statusworks = new Statusworks();
+
     public static final class General {
 
         @Config.Name("debug_logging")
@@ -146,6 +149,17 @@ public final class JassIntegrationsConfig {
         @Config.Comment({
                 "If false, the CraftTweaker class mods.jassintegrations.Stamina is not registered, so scripts that use it",
                 "report it as unknown. Needs a restart."})
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
+    }
+
+    public static final class Statusworks {
+
+        @Config.Name("enabled")
+        @Config.Comment({
+                "If false, the jassintegrations:* Statusworks contribution types are not registered, so Statusworks disables",
+                "the statuses, pools and marks that name them, and names them in its log. This mod adds none of its own.",
+                "Needs a restart."})
         @Config.RequiresMcRestart
         public boolean enabled = true;
     }

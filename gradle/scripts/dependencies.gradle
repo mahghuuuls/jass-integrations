@@ -64,6 +64,7 @@ dependencies {
     compileOnly rfg.deobf('curse.maven:just-another-food-system-1758738:9283113')
     compileOnly rfg.deobf('curse.maven:setworks-1768283:9434914')
     compileOnly rfg.deobf('CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.718')
+    compileOnly rfg.deobf('curse.maven:statusworks-1769992:9511285')
     // Tests check the Spartan Weaponry class names the weapon-type table relies on.
     testImplementation rfg.deobf('curse.maven:spartan-weaponry-278141:6839689')
     // Tests check the Spartan Shields methods the shield bash Mixins patch.
@@ -71,6 +72,7 @@ dependencies {
     testImplementation rfg.deobf('curse.maven:just-another-food-system-1758738:9283113')
     testImplementation rfg.deobf('curse.maven:setworks-1768283:9434914')
     testImplementation rfg.deobf('CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.718')
+    testImplementation rfg.deobf('curse.maven:statusworks-1769992:9511285')
 
     // Development runtime with the target mods, opt-in: set dev_runtime_targets = true in gradle.properties.
     if (propertyBool('dev_runtime_targets')) {
@@ -84,6 +86,7 @@ dependencies {
         runtimeOnly rfg.deobf('curse.maven:setworks-1768283:9434914')
         // CraftTweaker runs the stamina test scripts and defines the Setworks test sets.
         runtimeOnly rfg.deobf('CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.718')
+        runtimeOnly rfg.deobf('curse.maven:statusworks-1769992:9511285')
     }
 
     // Agent Diagnostics Toolkit, development runtime only; never packaged or declared.
