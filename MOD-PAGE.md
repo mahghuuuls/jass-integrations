@@ -1,4 +1,4 @@
-Adds [Just Another Stamina System](https://www.curseforge.com/minecraft/mc-mods/just-another-stamina-system) (JASS) support to other mods, so their weapons, shields, items and tooltips work with JASS's stamina system. For Quality Tools, Just Another Food System and Setworks it adds stamina stats that modpack creators put on their own qualities, foods and set bonuses. Each integration runs only when its mod is installed.
+Adds [Just Another Stamina System](https://www.curseforge.com/minecraft/mc-mods/just-another-stamina-system) (JASS) support to other mods, so their weapons, shields, items and tooltips work with JASS's stamina system. For Quality Tools, Just Another Food System, Setworks and Statusworks it adds stamina stats that modpack creators put on their own qualities, foods, set bonuses and statuses. With CraftTweaker, scripts can check, change and spend stamina. Each integration runs only when its mod is installed.
 
 <span style="color:#d6a100">**AI usage disclaimer:** This mod was developed with AI-agent assistance using [this agent workflow](https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow). The project owner reviewed the work during development.</span>
 
@@ -84,9 +84,63 @@ Setworks.bonus("mypack:iron_stamina").requires("mypack:iron_armor", 2)
 
 The bonus lasts while the set bonus is active. A bonus without its own description shows this line as "+10% Maximum Stamina". A value Setworks cannot use, such as an amount out of range, turns off that bonus and its set, and the game log says why.
 
+### [Statusworks](https://www.curseforge.com/minecraft/mc-mods/statusworks)
+
+Needs Statusworks 1.2.0 or newer. With an older Statusworks this integration stays off, with a warning in the log.
+
+JASS Integrations adds no statuses of its own. It adds the stamina stats (see Stamina Stats below) as contribution types that modpack creators and other mods can name in their Statusworks statuses, pools and marks, in CraftTweaker scripts or in Java. The flat names are the JAFS property names; each percent form has its own name ending in `_percent`:
+
+- `jassintegrations:max_stamina` and `jassintegrations:max_stamina_percent`
+- `jassintegrations:stamina_regeneration` (per second) and `jassintegrations:stamina_regeneration_percent`
+- `jassintegrations:regeneration_delay_reduction` (seconds) and `jassintegrations:regeneration_delay_reduction_percent`
+- `jassintegrations:stamina_efficiency`
+- `jassintegrations:shield_stability`
+- `jassintegrations:weight_reduction` and `jassintegrations:weight_reduction_percent`
+
+For example, a status that gives 10% more Maximum Stamina per stack:
+
+```zenscript
+import mods.statusworks.Statuses;
+
+Statuses.define("mypack:vigor")
+    .limit(5)
+    .expiration("none")
+    .contributeType("jassintegrations:max_stamina_percent", "per_stack", 10.0)
+    .register();
+```
+
+A bonus counts while Statusworks keeps the status, pool or mark on the player, and it changes with the stacks, the pool's fill or the mark. Bonuses from several statuses, pools and marks add up. They affect players only.
+
+### [CraftTweaker](https://www.curseforge.com/minecraft/mc-mods/crafttweaker)
+
+Needs CraftTweaker 4.1.20 or newer. Scripts can check, change and spend a player's stamina with the class `mods.jassintegrations.Stamina`. Every method takes the player first:
+
+- **Checks:** `getStamina`, `getVisibleStamina`, `getDebt`, `getMaxStamina`, `getRegeneration`, `getRegenerationDelay`, `getEfficiency`, `getWeight` and `isSpendingPaused` return what `/stamina inspect` shows. `getStamina` goes below 0 in stamina debt; `getVisibleStamina` does not. `isSpendingPaused` is true while JASS has paused spending.
+- **Changes:** `setStamina(player, value)`, `restoreStamina(player, amount)` and `removeStamina(player, amount)` change stamina directly and return the change made.
+- **Spending:** `spendStamina(player, action, cost)` charges the cost like a JASS action, with Stamina Efficiency, stamina debt and the refusal at zero stamina, and returns true when the action may happen. In Creative mode, or while JASS has paused spending, nothing is paid and the call returns true. Add `true` as a fourth argument to apply the player's weight, as for sprinting. `canStartAction(player, action)` asks without paying.
+
+```zenscript
+import crafttweaker.event.PlayerRightClickItemEvent;
+import mods.jassintegrations.Stamina;
+
+events.onPlayerRightClickItem(function(event as PlayerRightClickItemEvent) {
+    if (isNull(event.item)) {
+        return;
+    }
+    if (event.item.definition.id != "minecraft:feather") {
+        return;
+    }
+    if (Stamina.spendStamina(event.player, "mypack:dash", 10)) {
+        event.player.sendChat("Dash!");
+    }
+});
+```
+
+The methods act on the server; on the client they return 0 or false and nothing changes. The action id is your own lower-case `namespace:path` name for the action, such as `mypack:dash`. A value that is not allowed, such as a negative amount, changes nothing and writes a warning to the CraftTweaker log. The class is not available to `#loader preinit` scripts.
+
 ## Stamina Stats
 
-Qualities, foods and set bonuses can give these stats. A positive amount helps the player and a negative amount hurts.
+Qualities, foods, set bonuses and Statusworks statuses, pools and marks can give these stats. A positive amount helps the player and a negative amount hurts.
 
 - **Maximum Stamina:** points or percent.
 - **Stamina Regeneration:** points per second or percent.
@@ -95,16 +149,16 @@ Qualities, foods and set bonuses can give these stats. A positive amount helps t
 - **Shield Stability:** points added to the Stability of every shield block, flat only. More Stability makes blocks cost less.
 - **Weight Reduction:** weight points or percent. A lighter player spends less stamina on sprinting, jumping and dodging.
 
-The allowed range of each food and set bonus value is in the README linked below.
+Food and set bonus values have allowed ranges, listed in the README linked below; Statusworks values have none.
 
 ## Configuration
 
-`config/jassintegrations.cfg` has a section for each integration, with a switch to turn it off and the values it uses, including every weapon type and shield tier. A JASS config entry for a single item wins over the weapon and shield values here. Switching an integration on or off needs a restart.
+`config/jassintegrations.cfg` has a section for each integration, with a switch to turn it off and the values it uses, including every weapon type and shield tier. A JASS config entry for a single item wins over the weapon and shield values here. Switching an integration or the Quark row on or off needs a restart.
 
 In multiplayer the server's values decide the costs. Give players the same config file so their tooltips show the same numbers.
 
 ## Installation
 
-Install on the server and on every client. Requires JASS 1.2.0 or newer and [MixinBooter](https://www.curseforge.com/minecraft/mc-mods/mixin-booter) 10.7 or newer (Cleanroom already includes MixinBooter). The Setworks support needs Setworks 1.1.0 or newer.
+Install on the server and on every client. Requires JASS 1.2.0 or newer. Made and tested on Cleanroom, which includes MixinBooter; on standard Forge, also install [MixinBooter](https://www.curseforge.com/minecraft/mc-mods/mixin-booter) 10.7 or newer. The Setworks integration needs Setworks 1.1.0 or newer, the Statusworks integration Statusworks 1.2.0 or newer, and the CraftTweaker integration CraftTweaker 4.1.20 or newer.
 
-Source code and full reference (every setting, stat ranges and config line formats): [github.com/mahghuuuls/jass-integrations](https://github.com/mahghuuuls/jass-integrations#readme)
+Source code and full reference (every setting, stat ranges, config line formats, the script and Statusworks reference, and the tested versions): [github.com/mahghuuuls/jass-integrations](https://github.com/mahghuuuls/jass-integrations#readme)

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.4.0
+
+### Added
+
+- CraftTweaker: the class `mods.jassintegrations.Stamina` for scripts. Checks (`getStamina`, `getVisibleStamina`, `getDebt`, `getMaxStamina`, `getRegeneration`, `getRegenerationDelay`, `getEfficiency`, `getWeight`, `isSpendingPaused`), direct changes (`setStamina`, `restoreStamina`, `removeStamina`) and simulated spending (`spendStamina` under every JASS rule, with an optional weight multiplier, and `canStartAction`). Server side only; invalid arguments change nothing and log one warning.
+- Statusworks: the stamina stats as contribution types for modpack statuses, pools and marks, `jassintegrations:max_stamina`, `jassintegrations:stamina_regeneration`, `jassintegrations:regeneration_delay_reduction`, `jassintegrations:stamina_efficiency`, `jassintegrations:shield_stability` and `jassintegrations:weight_reduction`, with a `_percent` type where the stat has a percent form. Contributions add up and count while Statusworks keeps them on the player.
+- Config: `crafttweaker.enabled` and `statusworks.enabled` switches. `debug_logging` also logs script changes and spends and Statusworks stamina bonus changes.
+
+### Compatibility
+
+- Optional CraftTweaker 4.1.20 or later (tested 4.1.20.718) and Statusworks 1.2.0 or later (tested 1.2.0); with an older Statusworks that integration turns off with one warning. Requirements unchanged: JASS 1.2.0 or later and MixinBooter 10.7 or later.
+
 ## 1.3.0
 
 ### Added
