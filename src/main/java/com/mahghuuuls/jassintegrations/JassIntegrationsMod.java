@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION,
         dependencies = "required-after:jass@[1.2.0,);required-after:mixinbooter@[10.7,);"
-                + "after:spartanweaponry;after:spartanshields;after:qualitytools;after:quark;after:jafs;after:setworks;after:crafttweaker;after:statusworks")
+                + "after:spartanweaponry;after:spartanshields;after:qualitytools;after:quark;after:jafs;after:setworks;after:crafttweaker;after:statusworks;after:reskillable")
 public class JassIntegrationsMod {
 
     @SidedProxy(clientSide = "com.mahghuuuls.jassintegrations.client.ClientProxy",

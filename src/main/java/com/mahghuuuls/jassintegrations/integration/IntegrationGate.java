@@ -34,7 +34,9 @@ public final class IntegrationGate {
             new Entry("CraftTweaker", "crafttweaker", s -> s.craftTweakerEnabled,
                     "com.mahghuuuls.jassintegrations.integration.crafttweaker.CraftTweakerIntegration"),
             new Entry("Statusworks", "statusworks", s -> s.statusworksEnabled,
-                    "com.mahghuuuls.jassintegrations.integration.statusworks.StatusworksIntegration")
+                    "com.mahghuuuls.jassintegrations.integration.statusworks.StatusworksIntegration"),
+            new Entry("Reskillable", "reskillable", s -> s.reskillableEnabled,
+                    "com.mahghuuuls.jassintegrations.integration.reskillable.ReskillableIntegration")
     ));
 
     private static final List<Integration> started = new ArrayList<>();
@@ -64,7 +66,7 @@ public final class IntegrationGate {
         /** Registers the integration's providers and handlers. Called during pre-initialization. */
         void start();
 
-        /** Runs after every mod has registered its items. */
+        /** Runs after every mod has registered its items and registry entries. */
         default void postInit() {
         }
 
@@ -152,10 +154,27 @@ public final class IntegrationGate {
         }
     }
 
-    /** Lets running integrations act once every mod has registered its items. */
+    /**
+     * Lets running integrations act once every mod has registered its items and registry entries. A failure stops
+     * only that integration's late part, with one warning.
+     */
     public static void postInitAll() {
         for (Integration integration : started) {
-            integration.postInit();
+            try {
+                integration.postInit();
+            } catch (LinkageError | RuntimeException e) {
+                DebugLog.warn(integration.getClass().getSimpleName() + ": post-initialization failed: " + e);
+            }
+        }
+    }
+
+    /** Whether a class declares a field of this name, checked without initializing any class. */
+    public static boolean hasField(String className, String fieldName) {
+        try {
+            Class.forName(className, false, IntegrationGate.class.getClassLoader()).getDeclaredField(fieldName);
+            return true;
+        } catch (ReflectiveOperationException | LinkageError e) {
+            return false;
         }
     }
 

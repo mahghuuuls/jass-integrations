@@ -5,6 +5,7 @@ import com.mahghuuuls.jass.api.StaminaContribution;
 import com.mahghuuuls.jassintegrations.diagnostic.DebugLog;
 import com.mahghuuuls.jassintegrations.integration.stamina.StaminaBonusMapping;
 import com.mahghuuuls.jassintegrations.integration.stamina.StaminaBonusTotals;
+import com.mahghuuuls.jassintegrations.integration.stamina.StaminaTotalsLog;
 import com.mahghuuuls.statusworks.api.ContributionService;
 import com.mahghuuuls.statusworks.api.StatusworksApi;
 import com.mahghuuuls.statusworks.api.contribution.ContributionGroup;
@@ -21,7 +22,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
  */
 final class StatusworksStaminaProvider implements IContextualStaminaModifierProvider {
 
-    private final StatusworksTotalsLog log = new StatusworksTotalsLog();
+    private final StaminaTotalsLog log = new StaminaTotalsLog();
 
     @Override
     public StaminaContribution getContribution(EntityPlayer player) {

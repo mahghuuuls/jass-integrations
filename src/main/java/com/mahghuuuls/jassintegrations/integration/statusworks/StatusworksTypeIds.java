@@ -1,8 +1,9 @@
 package com.mahghuuuls.jassintegrations.integration.statusworks;
 
+import com.mahghuuuls.jassintegrations.Tags;
 import com.mahghuuuls.jassintegrations.integration.stamina.StaminaBonus;
+import com.mahghuuuls.jassintegrations.integration.stamina.StaminaBonusNames;
 import com.mahghuuuls.jassintegrations.integration.stamina.StaminaBonusTotals;
-import com.mahghuuuls.jassintegrations.integration.stamina.StaminaProperty;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -11,12 +12,10 @@ import java.util.function.Function;
 
 /**
  * The Statusworks contribution type id of each stamina bonus, and the sum of a player's values. Statusworks
- * types carry no operation, so a property's percent bonus gets its own id: the property id with
- * {@code _percent}. Uses no Statusworks class, so it can be tested alone.
+ * types carry no operation, so a type id is the mod id and the bonus name of {@link StaminaBonusNames}. Uses no
+ * Statusworks class, so it can be tested alone.
  */
 final class StatusworksTypeIds {
-
-    static final String PERCENT_SUFFIX = "_percent";
 
     /** Every stamina bonus by its type id, in catalogue order. */
     static final Map<String, StaminaBonus> BY_ID = Collections.unmodifiableMap(build());
@@ -26,12 +25,7 @@ final class StatusworksTypeIds {
 
     private static Map<String, StaminaBonus> build() {
         Map<String, StaminaBonus> ids = new LinkedHashMap<>();
-        for (StaminaProperty property : StaminaProperty.values()) {
-            ids.put(property.id(), property.flat);
-            if (property.supportsPercent()) {
-                ids.put(property.id() + PERCENT_SUFFIX, property.percent);
-            }
-        }
+        StaminaBonusNames.BY_NAME.forEach((name, bonus) -> ids.put(Tags.MOD_ID + ":" + name, bonus));
         return ids;
     }
 

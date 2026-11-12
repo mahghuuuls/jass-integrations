@@ -4,6 +4,7 @@ import com.mahghuuuls.jass.api.StaminaContribution;
 import com.mahghuuuls.jassintegrations.integration.stamina.StaminaBonus;
 import com.mahghuuuls.jassintegrations.integration.stamina.StaminaBonusMapping;
 import com.mahghuuuls.jassintegrations.integration.stamina.StaminaBonusTotals;
+import com.mahghuuuls.jassintegrations.integration.stamina.StaminaTotalsLog;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -95,7 +96,7 @@ class StatusworksIntegrationTest {
 
     @Test
     void theDebugRecordCountsOnlyRealChangesAndStartsOverAtLogout() {
-        StatusworksTotalsLog log = new StatusworksTotalsLog();
+        StaminaTotalsLog log = new StaminaTotalsLog();
         UUID player = UUID.randomUUID();
         StaminaBonusTotals vigor = StaminaBonusTotals.NONE.with(StaminaBonus.MAX_STAMINA_PERCENT, 20);
         assertFalse(log.changed(player, StaminaBonusTotals.NONE), "no bonus at the first rebuild is no change");

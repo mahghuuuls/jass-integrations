@@ -1,6 +1,7 @@
 package com.mahghuuuls.jassintegrations.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,6 +40,9 @@ public final class Settings {
     public final boolean setworksEnabled;
     public final boolean craftTweakerEnabled;
     public final boolean statusworksEnabled;
+    public final boolean reskillableEnabled;
+    /** The skill rule lines as written; the Reskillable integration parses them. */
+    public final List<String> reskillableSkillRules;
     private final Map<String, WeaponValues> weaponTypes;
     private final Map<String, ShieldValues> shieldTiers;
     private final Map<String, Integer> materialTiers;
@@ -66,6 +70,8 @@ public final class Settings {
         boolean setworksEnabled = true;
         boolean craftTweakerEnabled = true;
         boolean statusworksEnabled = true;
+        boolean reskillableEnabled = true;
+        String[] reskillableSkillRules = BalanceDefaults.RESKILLABLE_SKILL_RULES;
     }
 
     private Settings(Raw raw, Map<String, WeaponValues> weaponTypes, Map<String, ShieldValues> shieldTiers,
@@ -79,6 +85,9 @@ public final class Settings {
         this.setworksEnabled = raw.setworksEnabled;
         this.craftTweakerEnabled = raw.craftTweakerEnabled;
         this.statusworksEnabled = raw.statusworksEnabled;
+        this.reskillableEnabled = raw.reskillableEnabled;
+        this.reskillableSkillRules = raw.reskillableSkillRules == null ? Collections.<String>emptyList()
+                : Collections.unmodifiableList(new ArrayList<>(Arrays.asList(raw.reskillableSkillRules)));
         this.weaponTypes = weaponTypes;
         this.shieldTiers = shieldTiers;
         this.materialTiers = materialTiers;
@@ -111,6 +120,8 @@ public final class Settings {
         raw.setworksEnabled = JassIntegrationsConfig.setworks.enabled;
         raw.craftTweakerEnabled = JassIntegrationsConfig.craftTweaker.enabled;
         raw.statusworksEnabled = JassIntegrationsConfig.statusworks.enabled;
+        raw.reskillableEnabled = JassIntegrationsConfig.reskillable.enabled;
+        raw.reskillableSkillRules = JassIntegrationsConfig.reskillable.skillRules;
         List<String> warnings = new ArrayList<>();
         current = fromConfig(raw, warnings);
         return warnings;

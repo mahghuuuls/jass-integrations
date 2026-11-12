@@ -43,6 +43,9 @@ public final class JassIntegrationsConfig {
     @Config.Name("statusworks")
     public static final Statusworks statusworks = new Statusworks();
 
+    @Config.Name("reskillable")
+    public static final Reskillable reskillable = new Reskillable();
+
     public static final class General {
 
         @Config.Name("debug_logging")
@@ -162,5 +165,24 @@ public final class JassIntegrationsConfig {
                 "Needs a restart."})
         @Config.RequiresMcRestart
         public boolean enabled = true;
+    }
+
+    public static final class Reskillable {
+
+        @Config.Name("enabled")
+        @Config.Comment("If false, Reskillable skill levels give no stamina bonuses. Needs a restart.")
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
+
+        @Config.Name("skill_rules")
+        @Config.Comment({
+                "One rule per line: <skill id>=<stat>,<amount per level>. The player gets the amount for each level of the",
+                "skill above the first, so level 1 gives nothing. Skill ids are Reskillable's, for example reskillable:agility,",
+                "reskillable:mining, or an add-on's skill. Stats: max_stamina, stamina_regeneration (per second),",
+                "regeneration_delay_reduction (seconds), stamina_efficiency, shield_stability, weight_reduction, and",
+                "max_stamina_percent, stamina_regeneration_percent, regeneration_delay_reduction_percent,",
+                "weight_reduction_percent. A negative amount is a penalty. A skill may have several rules. Needs a restart."})
+        @Config.RequiresMcRestart
+        public String[] skillRules = BalanceDefaults.RESKILLABLE_SKILL_RULES.clone();
     }
 }

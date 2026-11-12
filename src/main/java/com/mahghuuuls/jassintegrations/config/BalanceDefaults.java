@@ -63,6 +63,11 @@ public final class BalanceDefaults {
             "tier_5_tower=100,1.0,1.0,8"
     };
 
+    /** {@code skill=stat,amount}: the default Reskillable skill rules, 1 Maximum Stamina per Agility level above the first. */
+    public static final String[] RESKILLABLE_SKILL_RULES = {
+            "reskillable:agility=max_stamina,1"
+    };
+
     /** {@code material=tier}: the tier of each Spartan Shields material. */
     public static final String[] SHIELD_MATERIALS = {
             "wood=1",

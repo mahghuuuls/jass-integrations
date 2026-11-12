@@ -37,6 +37,13 @@ class IntegrationGateTest {
     }
 
     @Test
+    void hasFieldChecksTheFieldAndTheClass() {
+        assertEquals(true, IntegrationGate.hasField("java.lang.Integer", "MAX_VALUE"));
+        assertEquals(false, IntegrationGate.hasField("java.lang.Integer", "NO_SUCH_FIELD"));
+        assertEquals(false, IntegrationGate.hasField("no.such.Clazz", "MAX_VALUE"));
+    }
+
+    @Test
     void hasMethodChecksNameAndExactParameters() {
         assertEquals(true, IntegrationGate.hasMethod("java.lang.String", "valueOf", "java.lang.Object"));
         assertEquals(false, IntegrationGate.hasMethod("java.lang.String", "valueOf", "java.lang.Thread"));
