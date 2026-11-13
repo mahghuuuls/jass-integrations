@@ -1,4 +1,4 @@
-Adds [Just Another Stamina System](https://www.curseforge.com/minecraft/mc-mods/just-another-stamina-system) (JASS) support to other mods, so their weapons, shields, items and tooltips work with JASS's stamina system. For Quality Tools, Just Another Food System, Setworks and Statusworks it adds stamina stats that modpack creators put on their own qualities, foods, set bonuses and statuses. With CraftTweaker, scripts can check, change and spend stamina. Each integration runs only when its mod is installed.
+Adds [Just Another Stamina System](https://www.curseforge.com/minecraft/mc-mods/just-another-stamina-system) (JASS) support to other mods, so their weapons, shields, items and tooltips work with JASS's stamina system. For Quality Tools, Just Another Food System, Setworks and Statusworks it adds stamina stats that modpack creators put on their own qualities, foods, set bonuses and statuses. With Reskillable, skill levels give stamina stats; by default each Agility level above the first adds 1 Maximum Stamina. With CraftTweaker, scripts can check, change and spend stamina. Each integration runs only when its mod is installed.
 
 <span style="color:#d6a100">**AI usage disclaimer:** This mod was developed with AI-agent assistance using [this agent workflow](https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow). The project owner reviewed the work during development.</span>
 
@@ -138,9 +138,22 @@ events.onPlayerRightClickItem(function(event as PlayerRightClickItemEvent) {
 
 The methods act on the server; on the client they return 0 or false and nothing changes. The action id is your own lower-case `namespace:path` name for the action, such as `mypack:dash`. A value that is not allowed, such as a negative amount, changes nothing and writes a warning to the CraftTweaker log. The class is not available to `#loader preinit` scripts.
 
+### [Reskillable](https://www.curseforge.com/minecraft/mc-mods/reskillable)
+
+Needs Reskillable 1.13.0 or newer. With an older Reskillable this integration stays off, with a warning in the log.
+
+A player's skill levels give stamina stats (see Stamina Stats below) through skill rules, one per line in the `skill_rules` list of the `reskillable` section of `config/jassintegrations.cfg`. A rule names a skill, a stat and an amount for each level above the first, so level 1 gives nothing. The default rule gives 1 Maximum Stamina per Agility level: with JASS's default Maximum Stamina of 60, a player at Agility 11 has 70, and at Agility 32 (Reskillable's default cap) 91. For example, the default rule and a Mining rule that adds 2% Stamina Regeneration per level:
+
+```
+reskillable:agility=max_stamina,1
+reskillable:mining=stamina_regeneration_percent,2
+```
+
+Stats: `max_stamina`, `stamina_regeneration`, `regeneration_delay_reduction`, `weight_reduction` (each also with `_percent`), `stamina_efficiency` and `shield_stability`. Any skill registered in Reskillable can have rules, including skills that other mods add. Rules add up, and a negative amount is a penalty. A rule for a skill that does not exist, or that is switched off in Reskillable's config, is skipped with a warning in the log. The bonus changes as soon as Reskillable changes a level. Changing the rules needs a restart.
+
 ## Stamina Stats
 
-Qualities, foods, set bonuses and Statusworks statuses, pools and marks can give these stats. A positive amount helps the player and a negative amount hurts.
+Qualities, foods, set bonuses, Reskillable skill levels, and Statusworks statuses, pools and marks can give these stats. A positive amount helps the player and a negative amount hurts.
 
 - **Maximum Stamina:** points or percent.
 - **Stamina Regeneration:** points per second or percent.
@@ -149,7 +162,7 @@ Qualities, foods, set bonuses and Statusworks statuses, pools and marks can give
 - **Shield Stability:** points added to the Stability of every shield block, flat only. More Stability makes blocks cost less.
 - **Weight Reduction:** weight points or percent. A lighter player spends less stamina on sprinting, jumping and dodging.
 
-Food and set bonus values have allowed ranges, listed in the README linked below; Statusworks values have none.
+Only food and set bonus values have allowed ranges, listed in the README linked below.
 
 ## Configuration
 
@@ -159,6 +172,6 @@ In multiplayer the server's values decide the costs. Give players the same confi
 
 ## Installation
 
-Install on the server and on every client. Requires JASS 1.2.0 or newer. Made and tested on Cleanroom, which includes MixinBooter; on standard Forge, also install [MixinBooter](https://www.curseforge.com/minecraft/mc-mods/mixin-booter) 10.7 or newer. The Setworks integration needs Setworks 1.1.0 or newer, the Statusworks integration Statusworks 1.2.0 or newer, and the CraftTweaker integration CraftTweaker 4.1.20 or newer.
+Install on the server and on every client. Requires JASS 1.2.0 or newer. Made and tested on Cleanroom, which includes MixinBooter; on standard Forge, also install [MixinBooter](https://www.curseforge.com/minecraft/mc-mods/mixin-booter) 10.7 or newer. The Setworks integration needs Setworks 1.1.0 or newer, the Statusworks integration Statusworks 1.2.0 or newer, the CraftTweaker integration CraftTweaker 4.1.20 or newer, and the Reskillable integration Reskillable 1.13.0 or newer.
 
-Source code and full reference (every setting, stat ranges, config line formats, the script and Statusworks reference, and the tested versions): [github.com/mahghuuuls/jass-integrations](https://github.com/mahghuuuls/jass-integrations#readme)
+Source code and full reference (every setting, stat ranges, config line formats, the CraftTweaker class, the Statusworks types, the skill rules, and the tested versions): [github.com/mahghuuuls/jass-integrations](https://github.com/mahghuuuls/jass-integrations#readme)

@@ -1,6 +1,6 @@
 # JASS Integrations
 
-An add-on for [Just Another Stamina System](https://github.com/mahghuuuls/jass) (JASS) for Minecraft 1.12.2. It gives Spartan Weaponry and Spartan Shields items stamina values by weapon type and shield tier, makes the Spartan shield bash and crossbow loading cost stamina, adds stamina attributes for Quality Tools qualities and stamina properties for Just Another Food System (JAFS) foods, Setworks set bonuses and Statusworks statuses, pools and marks, gives CraftTweaker scripts a class to check, change and spend stamina, and shows JASS tooltip values as an icon row in Quark: RotN Edition's style. It uses only the public JASS API.
+An add-on for [Just Another Stamina System](https://github.com/mahghuuuls/jass) (JASS) for Minecraft 1.12.2. It gives Spartan Weaponry and Spartan Shields items stamina values by weapon type and shield tier, makes the Spartan shield bash and crossbow loading cost stamina, adds stamina attributes for Quality Tools qualities and stamina properties for Just Another Food System (JAFS) foods, Setworks set bonuses and Statusworks statuses, pools and marks, turns Reskillable skill levels into stamina stats by configurable rules, gives CraftTweaker scripts a class to check, change and spend stamina, and shows JASS tooltip values as an icon row in Quark: RotN Edition's style. It uses only the public JASS API.
 
 - Player-facing description: [MOD-PAGE.md](MOD-PAGE.md)
 - Release history: [CHANGELOG.md](CHANGELOG.md)
@@ -8,10 +8,10 @@ An add-on for [Just Another Stamina System](https://github.com/mahghuuuls/jass) 
 
 ## Identity and installation
 
-- Mod ID `jassintegrations`, version 1.4.0, Forge 1.12.2 artifact. Developed and tested on Cleanroom.
+- Mod ID `jassintegrations`, version 1.5.0, Forge 1.12.2 artifact. Developed and tested on Cleanroom.
 - Required on the server and on every client.
 - Requires JASS 1.2.0 or later (tested 1.2.0) and MixinBooter 10.7 or later (Cleanroom includes it).
-- Integrations, each active only when its target mod is present: Spartan Weaponry (tested 1.6.1), Spartan Shields (tested 1.5.5), Quality Tools (tested 1.0.7), Quark: RotN Edition (tested r1.6-192), JAFS (tested 1.0.0), Setworks 1.1.0 or later (tested 1.1.0), CraftTweaker 4.1.20 or later (tested 4.1.20.718), Statusworks 1.2.0 or later (tested 1.2.0). The startup log has one line per integration: running, switched off in the config, or target mod not installed. With Setworks 1.0.0 the Setworks integration is off with one warning and the others run.
+- Integrations, each active only when its target mod is present: Spartan Weaponry (tested 1.6.1), Spartan Shields (tested 1.5.5), Quality Tools (tested 1.0.7), Quark: RotN Edition (tested r1.6-192), JAFS (tested 1.0.0), Setworks 1.1.0 or later (tested 1.1.0), CraftTweaker 4.1.20 or later (tested 4.1.20.718), Statusworks 1.2.0 or later (tested 1.2.0), Reskillable 1.13.0 or later (tested 1.13.0); with an older Reskillable the Reskillable integration is off with one warning. The startup log has one line per integration: running, switched off in the config, or target mod not installed. With Setworks 1.0.0 the Setworks integration is off with one warning and the others run.
 
 ## Configuration
 
@@ -19,7 +19,7 @@ All settings live in `config/jassintegrations.cfg`. A JASS config entry for a si
 
 | Category | Keys |
 | --- | --- |
-| `general` | `debug_logging` (logs shield bash charges and refusals, crossbow loading, quality attribute changes, JAFS stamina bonus changes, Setworks and Statusworks stamina bonus changes, and each CraftTweaker script change, spend or start check) |
+| `general` | `debug_logging` (logs shield bash charges and refusals, crossbow loading, quality attribute changes, JAFS stamina bonus changes, Setworks, Statusworks and Reskillable stamina bonus changes, the Reskillable skill rules in use, and each CraftTweaker script change, spend or start check) |
 | `spartan_weaponry` | `enabled`, `weapon_types` |
 | `spartan_shields` | `enabled`, `shield_tiers`, `shield_materials`, `bash_cost` (default 8) |
 | `crossbow` | `loading_drain` (default 10 per second) |
@@ -29,6 +29,7 @@ All settings live in `config/jassintegrations.cfg`. A JASS config entry for a si
 | `setworks` | `enabled` |
 | `crafttweaker` | `enabled` |
 | `statusworks` | `enabled` |
+| `reskillable` | `enabled`, `skill_rules` |
 
 Line formats, one entry per line:
 
@@ -104,6 +105,19 @@ Registered with Statusworks 1.2.0 or later as contribution types, so a status, p
 - The types apply to players only; on other entities nothing changes. This mod adds no status, pool, mark or cooldown and saves nothing; Statusworks owns and saves the values.
 - The values reach JASS through a contextual provider, `jassintegrations:statusworks`. With the Statusworks integration switched off, Statusworks reports every definition that names these types as invalid (unknown contribution type). With a Statusworks older than 1.2.0 the integration is off with one warning naming 1.2.0.
 
+## Reskillable skill rules
+
+With Reskillable 1.13.0 or later, a player's Reskillable skill levels give the stamina stats by the rules in `reskillable.skill_rules`, one per line, `<skill id>=<stat>,<amount per level>`:
+
+- The skill id is a Reskillable registry id (`reskillable:agility`, `reskillable:mining`, or a skill another mod registers in Reskillable).
+- The stat is one of the Statusworks contribution type names without `jassintegrations:` (`max_stamina`, `max_stamina_percent`, `stamina_regeneration`, `stamina_regeneration_percent`, `regeneration_delay_reduction`, `regeneration_delay_reduction_percent`, `stamina_efficiency`, `shield_stability`, `weight_reduction`, `weight_reduction_percent`), with the same units and signs.
+- The amount is a finite decimal number given for each level above the first, `amount x (level - 1)`, so level 1 gives nothing; a negative amount is a penalty. There is no per-entry range.
+- Default: `reskillable:agility=max_stamina,1`.
+- A skill may have several rules, and identical lines each count. Rules add up per stat, flat and percent separately; a percent total below -100 counts as -100.
+- A line that cannot be read logs one warning. A rule whose skill is not registered, or is switched off in Reskillable's config, is skipped with one warning once every mod is loaded. With `debug_logging` on, one line lists the rules in use. Rule changes need a restart.
+- The bonus follows every level change Reskillable makes (the level-up button, `/reskillable setskilllevel`, `incrementskill`, `resetskill`, `resetall`) at once, and the player's current levels count after a login, respawn or dimension change. A level set by another mod without Reskillable's level event counts from JASS's next profile rebuild.
+- The values reach JASS through a contextual provider, `jassintegrations:reskillable`. This mod saves nothing; Reskillable owns and saves the levels. Players only.
+
 ## CraftTweaker class
 
 With CraftTweaker 4.1.20 or later, scripts of the main `crafttweaker` loader and later loaders (such as Setworks') can use `mods.jassintegrations.Stamina`; `#loader preinit` scripts cannot. Every method is static and takes the player (`IPlayer`) first.
@@ -130,7 +144,7 @@ With CraftTweaker 4.1.20 or later, scripts of the main `crafttweaker` loader and
 - Spartan Shields: the bash cost is charged by a Mixin into Spartan Shields' bash packet handler; a client Mixin skips the arm swing when the bash will be refused. If either target method is missing, the bash cost stays off with one warning and the rest of the integration runs.
 - JASS refuses a mouse attack aimed at an entity or at air at 0 stamina, so a bash in that case is refused by JASS before Spartan Shields sees it.
 - Quark row: needs Quark's Visual Stat Display on. It replaces only the JASS value lines; JASS's modifier lines stay as text. With JASS's `item_tooltips=shift`, the row is not drawn and JASS's "Hold Shift" hint stays.
-- Action ids for JASS: `jassintegrations:shield_bash`, `jassintegrations:crossbow_load`. Provider ids: `jassintegrations:spartan_weaponry`, `jassintegrations:spartan_shields`, `jassintegrations:quality_tools`, `jassintegrations:jafs`, `jassintegrations:setworks`, `jassintegrations:statusworks`. Scripts choose their own action ids for `spendStamina`.
+- Action ids for JASS: `jassintegrations:shield_bash`, `jassintegrations:crossbow_load`. Provider ids: `jassintegrations:spartan_weaponry`, `jassintegrations:spartan_shields`, `jassintegrations:quality_tools`, `jassintegrations:jafs`, `jassintegrations:setworks`, `jassintegrations:statusworks`, `jassintegrations:reskillable`. Scripts choose their own action ids for `spendStamina`.
 
 ## License
 

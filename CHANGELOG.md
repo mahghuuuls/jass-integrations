@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.5.0
+
+### Added
+
+- Reskillable: a player's skill levels give the stamina stats by skill rules in the new `reskillable.skill_rules` list, `<skill id>=<stat>,<amount per level>`, counted for each level above the first. Default: each Agility level above the first gives 1 Maximum Stamina. Any skill registered in Reskillable can have rules; the stat names are those of the Statusworks types without `jassintegrations:`. The bonus follows every level change Reskillable makes at once.
+- Config: `reskillable.enabled` and `reskillable.skill_rules`. `debug_logging` also logs Reskillable stamina bonus changes and the skill rules in use.
+
+### Compatibility
+
+- Optional Reskillable 1.13.0 or later (tested 1.13.0); with an older Reskillable the integration is off with one warning. A rule for a skill that is missing or switched off in Reskillable is skipped with one warning. Requirements unchanged: JASS 1.2.0 or later and MixinBooter 10.7 or later.
+
 ## 1.4.0
 
 ### Added
